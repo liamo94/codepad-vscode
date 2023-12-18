@@ -1,21 +1,24 @@
 export interface Snippet {
   snippet: string;
+  title?: string;
+  description?: string;
   fileExtension?: string;
   fileType?: string;
   fileName: string;
   fullFilePath: string;
   createdAt: string;
-  lines?: string;
+  lines: [from: number, to: number];
   git?: Git;
 }
 
 export interface Git {
   fileCommitHash: string;
   fileCommitUrl: string;
-  lineCommitHash?: string;
-  lineCommitUrl?: string;
+  lineCommitHash: string;
+  lineCommitUrl: string;
   repository: string;
   url: string;
   ssh: string;
   branch: string;
+  shareableLink: string;
 }

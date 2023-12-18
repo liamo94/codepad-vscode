@@ -1,7 +1,8 @@
 {
   "name": "codepad",
+  "author": "Liam O'Donnell",
   "displayName": "CodePad",
-  "description": "Save code blocks for reminders",
+  "description": "Save detailed code blocks from within VS Code",
   "license": "MIT",
   "private": false,
   "version": "0.0.1",
@@ -9,7 +10,8 @@
     "vscode": "^1.80.0"
   },
   "categories": [
-    "Other"
+    "Notebooks",
+    "Snippets"
   ],
   "activationEvents": [],
   "main": "./out/extension.js",
@@ -26,17 +28,43 @@
         "codepad.savePath": {
           "type": "string",
           "description": "Path to save code snippet."
+        },
+        "codepad.folderPath": {
+          "type": "string",
+          "default": ".snippets",
+          "description": "Folder to save code snippets in. Leave blank to save in root."
+        },
+        "codepad.includeGitDetails": {
+          "type": "boolean",
+          "default": true,
+          "description": "Choose whether to include git details (if available)."
+        },
+        "codepad.openInIDE": {
+          "type": "boolean",
+          "default": true,
+          "description": "Choose whether to open your new note immediately in a new tab."
+        },
+        "codepad.formatCode": {
+          "type": "boolean",
+          "default": true,
+          "description": "Codepad will attempt to format your code snippet for you."
+        },
+        "codepad.saveRawJSON": {
+          "type": "boolean",
+          "default": false,
+          "description": "Save the JSON of the data used to generate your snippet"
         }
       }
     }
   },
   "scripts": {
     "vscode:prepublish": "yarn run compile",
-    "compile": "tsc -p ./",
+    "compile": "tsc -p ./ && yarn copy-files",
     "watch": "tsc -watch -p ./",
     "pretest": "yarn run compile && yarn run lint",
     "lint": "eslint src --ext ts",
-    "test": "node ./out/test/runTest.js"
+    "test": "node ./out/test/runTest.js",
+    "copy-files": "rm -rf out/md && cp -r src/md out/md "
   },
   "devDependencies": {
     "@types/vscode": "^1.85.0",

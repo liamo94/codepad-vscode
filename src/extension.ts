@@ -5,6 +5,7 @@ import { existsSync, mkdirSync, writeFileSync } from "fs";
 import { Git, Snippet } from "./types";
 import { homedir } from "os";
 import { getGitInformation } from "./getGitInformation";
+import { generateMD } from "./generateMD";
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
@@ -37,8 +38,8 @@ export function activate(context: vscode.ExtensionContext) {
           const fullFilePath = editor?.document.fileName;
           const createdAt = new Date().toISOString();
           const selection = editor?.selection;
-          const { savePath } = vscode.workspace.getConfiguration("codepad");
-          console.log(savePath);
+          const { savePath, includeGitDetails, openInIDE, saveRawJSON } =
+            vscode.workspace.getConfiguration("codepad");
           let snippet = "";
           if (selection && !selection.isEmpty) {
             const selectionRange = new vscode.Range(
@@ -64,10 +65,19 @@ export function activate(context: vscode.ExtensionContext) {
             progress.report({ increment: 100 });
             if (selection && !selection.isEmpty && rootPath) {
               git = await getGitInformation(rootPath, fullFilePath || "", [
-                selection.start.line,
-                selection.end.line,
+                selection.start.line + 1,
+                selection.end.line + 1,
               ]);
               console.log(JSON.stringify(git));
+              generateMD({
+                snippet,
+                createdAt,
+                fileName: "TODO",
+                fullFilePath: fullFilePath || "",
+                title,
+                git,
+                lines: [selection.start.line + 1, selection.end.line + 1],
+              });
             }
             vscode.window.showInformationMessage("hey", JSON.stringify(git));
           } catch (e) {
@@ -91,8 +101,16 @@ export function activate(context: vscode.ExtensionContext) {
     }
   );
 
+  let disposable3 = vscode.commands.registerCommand(
+    "codepad.addSnippetWithFilePath",
+    async () => {
+      vscode.window.showInformationMessage("nice one");
+    }
+  );
+
   context.subscriptions.push(disposable);
   context.subscriptions.push(disposable2);
+  context.subscriptions.push(disposable3);
 }
 
 function createFolderIfNotExists(dir: string) {
