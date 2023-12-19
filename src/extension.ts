@@ -64,7 +64,9 @@ export function activate(context: vscode.ExtensionContext) {
               "No code snippet selected"
             );
           }
-          const title = await getSearchQuery();
+          const title = await getTitle();
+          const description = await getDescription();
+
           if (title === undefined) {
             return;
           }
@@ -85,9 +87,10 @@ export function activate(context: vscode.ExtensionContext) {
             const snippetObj: Snippet = {
               snippet,
               createdAt,
-              fileName: "TODO",
+              fileName: fullFilePathWithFile?.split("/").pop() || "",
               fullFilePath: fullFilePathWithFile || "",
               title,
+              description,
               git,
               lines: [selection!.start.line + 1, selection!.end.line + 1],
             };
@@ -120,29 +123,21 @@ export function activate(context: vscode.ExtensionContext) {
     }
   );
 
-  let disposable3 = vscode.commands.registerCommand(
-    "codepad.addSnippetWithFilePath",
-    async () => {
-      vscode.window.showInformationMessage("nice one");
-    }
-  );
-
   context.subscriptions.push(disposable);
   context.subscriptions.push(disposable2);
-  context.subscriptions.push(disposable3);
-}
-
-function createFolderIfNotExists(dir: string) {
-  if (!existsSync(dir)) {
-    mkdirSync(dir);
-  }
 }
 
 // This method is called when your extension is deactivated
 export function deactivate() {}
 
-const getSearchQuery = async () =>
+const getTitle = async () =>
   await vscode.window.showInputBox({
     placeHolder: "Title",
     prompt: "Set title for snippet",
+  });
+
+const getDescription = async () =>
+  await vscode.window.showInputBox({
+    placeHolder: "Description (optional)",
+    prompt: "Add a description for the snippet",
   });

@@ -38,8 +38,6 @@ export const writeSnippetToFile = async ({
 
   writeFileSync(file, stringSnippet);
 
-  console.log(existsSync(file), file);
-
   return file;
 };
 

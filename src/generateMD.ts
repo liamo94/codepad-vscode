@@ -1,19 +1,14 @@
-import { Snippet } from "./types";
 import { readFileSync } from "fs";
 import { resolve } from "path";
 import { getFileExtension, getFileLoc, getFileSize } from "./fileInformation";
+import { Git, Snippet } from "./types";
+import { massageString } from "./utils";
+
 export const generateMD = (snippet: Snippet, includeGit?: boolean) => {
-  //Use fetch to import TEMPLATE.md from local path
-  //Replace variables in TEMPLATE.md with snippet data
-  //Return string
   const templatePath = "./md/TEMPLATE.md";
-  const gitTemplatePath = "/md/GIT_TEMPLATE.md";
-  let templateContent = "";
   const fullTemplatePath = resolve(__dirname, templatePath);
-  console.log(fullTemplatePath);
   const data = readFileSync(fullTemplatePath);
-  console.log(replaceMdVariables(snippet, data.toString()));
-  return replaceMdVariables(snippet, data.toString());
+  return replaceMdVariables(snippet, data.toString(), includeGit);
 };
 
 const replaceMdVariables = (
@@ -27,29 +22,54 @@ const replaceMdVariables = (
     lines: [from, to],
     description,
     title,
+    git,
   }: Snippet,
-  md: string
+  md: string,
+  includeGit?: boolean
 ) => {
   const fileSize = getFileSize(fullFilePath);
   const loc = getFileLoc(fullFilePath);
-  return md
+  const gitMd = includeGit && git ? generateGitMD(git) : "";
+  const markdown = md
     .replace("{{title}}", title || fileName)
     .replace("{{description}}", description || "")
-    .replace("{{createdAt}}", createdAt)
+    .replace("{{createdAt}}", new Date(createdAt).toLocaleDateString())
     .replace("{{fileName}}", fileName)
     .replace("{{fullFilePath}}", fullFilePath)
     .replace("{{fileSize}}", fileSize.toString())
     .replace("{{loc}}", loc.toString())
-    .replace("{{snippet}}", snippet)
+    .replace("{{snippet}}", massageString(snippet))
     .replace("{{fileExtension}}", getFileExtension(fullFilePath) || "none")
     .replace("{{language}}", fileType || "")
     .replace("{{fileType}}", fileType || "Unknown")
     .replace("{{lineRange}}", from !== to ? `${from}-${to}` : `L${from}`)
     .replace("{{lines}}", `${to - from}`);
+  return `${markdown}\n${gitMd}`;
 };
-// read raw md file
-// replace variables with data
-// if git, read raw git file, replace variables with data and append to md file
-// check for directory
-// write to file
-// finish
+
+const generateGitMD = ({
+  branch,
+  fileCommitHash,
+  fileCommitUrl,
+  lineCommitHash,
+  lineCommitUrl,
+  repository,
+  shareableLink,
+  ssh,
+  url,
+}: Git) => {
+  const templatePath = "./md/GIT_INFORMATION.md";
+  const fullTemplatePath = resolve(__dirname, templatePath);
+  const data = readFileSync(fullTemplatePath);
+  return data
+    .toString()
+    .replace("{{git.repo}}", repository)
+    .replace("{{git.url}}", url)
+    .replace("{{git.ssh}}", ssh)
+    .replace("{{git.shareableLink}}", shareableLink)
+    .replace("{{git.branch}}", branch)
+    .replace("{{git.fileHash}}", fileCommitHash)
+    .replace("{{git.fileHashUrl}}", fileCommitUrl)
+    .replace("{{git.snippetCommitHash}}", lineCommitHash)
+    .replace("{{git.snippetCommitHashUrl}}", lineCommitUrl);
+};

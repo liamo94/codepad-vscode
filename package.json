@@ -1,8 +1,12 @@
 {
   "name": "codepad",
+  "description": "Save detailed code blocks from within VS Code",
   "author": "Liam O'Donnell",
   "displayName": "CodePad",
-  "description": "Save detailed code blocks from within VS Code",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/liamo94/codepad-vscode.git"
+  },
   "license": "MIT",
   "private": false,
   "version": "0.0.1",
@@ -20,6 +24,10 @@
       {
         "command": "codepad.addSnippet",
         "title": "Codepad: Add snippet"
+      },
+      {
+        "command": "codepad.addSnippetWithTitle",
+        "title": "Codepad: Add snippet (with title, description)"
       }
     ],
     "configuration": {
@@ -63,23 +71,32 @@
     "watch": "tsc -watch -p ./",
     "pretest": "yarn run compile && yarn run lint",
     "lint": "eslint src --ext ts",
-    "test": "node ./out/test/runTest.js",
-    "copy-files": "rm -rf out/md && cp -r src/md out/md "
+    "test": "jest",
+    "copy-files": "rm -rf out/md && cp -r src/md out/md"
   },
   "devDependencies": {
+    "@babel/core": "^7.23.6",
+    "@babel/preset-env": "^7.23.6",
+    "@babel/preset-typescript": "^7.23.3",
     "@types/glob": "^8.1.0",
-    "@types/mocha": "^10.0.6",
+    "@types/jest": "^29.5.11",
     "@types/node": "^20.10.4",
     "@types/vscode": "^1.85.0",
     "@typescript-eslint/eslint-plugin": "^6.14.0",
     "@typescript-eslint/parser": "^6.14.0",
     "@vscode/test-electron": "^2.3.8",
+    "babel-jest": "^29.7.0",
     "eslint": "^8.55.0",
     "glob": "^8.1.0",
-    "mocha": "^10.2.0",
+    "jest": "^29.7.0",
     "typescript": "^5.3.3"
   },
   "dependencies": {
     "prettier": "^3.1.1"
+  },
+  "jest": {
+    "testPathIgnorePatterns": [
+      "out"
+    ]
   }
 }

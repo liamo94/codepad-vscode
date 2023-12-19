@@ -6,18 +6,20 @@
 {{snippet}}
 ```
 
-Created on: **{{createdAt}}**
+**Created on**: {{createdAt}}
 
-Additional notes:
+### Additional notes:
+
+> Notes post snippet creation...
 
 ## File information
 
-- Name: {{fileName}}
-- Path: {{fullFilePath}}
-- Size: {{fileSize} }bytes | {{loc}} loc
-- Language: {{fileType}}
-- Extension: {{fileExtension}}
+- **Name**: {{fileName}}
+- **Path**: {{fullFilePath}}
+- **Size**: {{fileSize}}bytes | {{loc}} loc
+- **Language**: {{fileType}}
+- **Extension**: {{fileExtension}}
 
 ## Snippet information
 
-- Lines: {{lineRange}} ({{lines}})
+- **Lines**: {{lineRange}} ({{lines}})
