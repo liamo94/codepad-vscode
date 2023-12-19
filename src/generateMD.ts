@@ -43,7 +43,9 @@ const replaceMdVariables = (
     .replace("{{snippet}}", snippet)
     .replace("{{fileExtension}}", getFileExtension(fullFilePath) || "none")
     .replace("{{language}}", fileType || "")
-    .replace("{{fileType}}", fileType || "Unknown");
+    .replace("{{fileType}}", fileType || "Unknown")
+    .replace("{{lineRange}}", from !== to ? `${from}-${to}` : `L${from}`)
+    .replace("{{lines}}", `${to - from}`);
 };
 // read raw md file
 // replace variables with data

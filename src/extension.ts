@@ -6,6 +6,8 @@ import { Git, Snippet } from "./types";
 import { homedir } from "os";
 import { getGitInformation } from "./getGitInformation";
 import { generateMD } from "./generateMD";
+import { writeSnippetToFile } from "./writeToFile";
+import path = require("path");
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
@@ -35,11 +37,18 @@ export function activate(context: vscode.ExtensionContext) {
           const editor = vscode.window.activeTextEditor;
           const documentText = editor?.document.getText();
           const rootPath = vscode.workspace.workspaceFolders?.[0].uri.fsPath;
-          const fullFilePath = editor?.document.fileName;
+          const fullFilePathWithFile = editor?.document.fileName;
+          const fullFilePath = path.dirname(fullFilePathWithFile || "");
+
           const createdAt = new Date().toISOString();
           const selection = editor?.selection;
-          const { savePath, includeGitDetails, openInIDE, saveRawJSON } =
-            vscode.workspace.getConfiguration("codepad");
+          const {
+            savePath,
+            includeGitDetails,
+            openInIDE,
+            saveRawJSON,
+            directoryName,
+          } = vscode.workspace.getConfiguration("codepad");
           let snippet = "";
           if (selection && !selection.isEmpty) {
             const selectionRange = new vscode.Range(
@@ -64,22 +73,32 @@ export function activate(context: vscode.ExtensionContext) {
             console.log(rootPath);
             progress.report({ increment: 100 });
             if (selection && !selection.isEmpty && rootPath) {
-              git = await getGitInformation(rootPath, fullFilePath || "", [
-                selection.start.line + 1,
-                selection.end.line + 1,
-              ]);
+              git = await getGitInformation(
+                rootPath,
+                fullFilePathWithFile || "",
+                [selection.start.line + 1, selection.end.line + 1]
+              );
               console.log(JSON.stringify(git));
-              generateMD({
-                snippet,
-                createdAt,
-                fileName: "TODO",
-                fullFilePath: fullFilePath || "",
-                title,
-                git,
-                lines: [selection.start.line + 1, selection.end.line + 1],
-              });
             }
+
             vscode.window.showInformationMessage("hey", JSON.stringify(git));
+            const snippetObj: Snippet = {
+              snippet,
+              createdAt,
+              fileName: "TODO",
+              fullFilePath: fullFilePathWithFile || "",
+              title,
+              git,
+              lines: [selection!.start.line + 1, selection!.end.line + 1],
+            };
+            await writeSnippetToFile({
+              snippet: snippetObj,
+              directoryPath: savePath,
+              filePath: fullFilePath || "",
+              isGit: includeGitDetails,
+              directoryName,
+              rootPath,
+            });
           } catch (e) {
             console.log(e);
             progress.report({ increment: 100 });
@@ -117,10 +136,6 @@ function createFolderIfNotExists(dir: string) {
   if (!existsSync(dir)) {
     mkdirSync(dir);
   }
-}
-
-function writeSnippetToFile(snippet: Snippet, dir: string) {
-  writeFileSync(`${dir}/SNIP_${snippet.createdAt}`, JSON.stringify(snippet));
 }
 
 // This method is called when your extension is deactivated
