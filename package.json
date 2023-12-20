@@ -39,8 +39,8 @@
         },
         "codepad.directoryName": {
           "type": "string",
-          "default": ".snippets",
-          "description": "Folder to save code snippets in. Leave blank to save in root."
+          "default": ".vscode/snippets",
+          "description": "Folder to save code snippets in. Leave blank to save by file."
         },
         "codepad.includeGitDetails": {
           "type": "boolean",
@@ -52,18 +52,21 @@
           "default": true,
           "description": "Choose whether to open your new note immediately in a new tab."
         },
-        "codepad.formatCode": {
-          "type": "boolean",
-          "default": true,
-          "description": "Codepad will attempt to format your code snippet for you."
-        },
         "codepad.saveRawJSON": {
           "type": "boolean",
           "default": false,
           "description": "Save the JSON of the data used to generate your snippet"
         }
       }
-    }
+    },
+    "keybindings": [
+      {
+        "command": "codepad.addSnippet",
+        "key": "shift+ctrl+'",
+        "mac": "shift+cmd+'",
+        "when": "editorTextFocus"
+      }
+    ]
   },
   "scripts": {
     "vscode:prepublish": "yarn run compile",

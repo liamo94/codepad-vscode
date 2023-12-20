@@ -1,8 +1,8 @@
 import { readFileSync } from "fs";
 import { resolve } from "path";
-import { getFileExtension, getFileLoc, getFileSize } from "./fileInformation";
+import { getFileExtension, getFileLoc, getFileName, getFileSize } from "./fs";
 import { Git, Snippet } from "./types";
-import { massageString } from "./utils";
+import { getLanguageFromAlias } from "./utils";
 
 export const generateMD = (snippet: Snippet, includeGit?: boolean) => {
   const templatePath = "./md/TEMPLATE.md";
@@ -18,7 +18,6 @@ const replaceMdVariables = (
     fullFilePath,
     snippet,
     fileExtension,
-    fileType,
     lines: [from, to],
     description,
     title,
@@ -30,6 +29,7 @@ const replaceMdVariables = (
   const fileSize = getFileSize(fullFilePath);
   const loc = getFileLoc(fullFilePath);
   const gitMd = includeGit && git ? generateGitMD(git) : "";
+
   const markdown = md
     .replace("{{title}}", title || fileName)
     .replace("{{description}}", description || "")
@@ -38,10 +38,22 @@ const replaceMdVariables = (
     .replace("{{fullFilePath}}", fullFilePath)
     .replace("{{fileSize}}", fileSize.toString())
     .replace("{{loc}}", loc.toString())
-    .replace("{{snippet}}", massageString(snippet))
-    .replace("{{fileExtension}}", getFileExtension(fullFilePath) || "none")
-    .replace("{{language}}", fileType || "")
-    .replace("{{fileType}}", fileType || "Unknown")
+    .replace("{{snippet}}", snippet)
+    .replace("{{fileExtension}}", fileExtension || "none")
+    .replace(
+      "{{language}}",
+      getLanguageFromAlias(
+        getFileName(fullFilePath),
+        getFileExtension(fullFilePath)
+      )
+    )
+    .replace(
+      "{{fileType}}",
+      getLanguageFromAlias(
+        getFileName(fullFilePath),
+        getFileExtension(fullFilePath)
+      ) ?? "Unknown"
+    )
     .replace("{{lineRange}}", from !== to ? `${from}-${to}` : `L${from}`)
     .replace("{{lines}}", `${to - from}`);
   return `${markdown}\n${gitMd}`;

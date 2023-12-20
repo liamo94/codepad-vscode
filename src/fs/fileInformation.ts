@@ -1,5 +1,5 @@
 import { statSync, readFileSync } from "fs";
-import { extname } from "path";
+import { extname, basename } from "path";
 
 export const getFileSize = (path: string) => {
   return statSync(path).size;
@@ -11,4 +11,8 @@ export const getFileLoc = (path: string) => {
 
 export const getFileExtension = (path: string) => {
   return extname(path);
+};
+
+export const getFileName = (path: string) => {
+  return basename(path);
 };

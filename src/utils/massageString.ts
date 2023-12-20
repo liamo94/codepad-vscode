@@ -1,5 +1,6 @@
 /**
- * Deletes the leading whitespace from a string.
+ * Deletes the leading whitespace from a string. If multiline, it will delete the
+ * leading whitespace from each line as calculated from the lowest whitespace.
  */
 export const massageString = (str: string) => {
   const strArray = str.split("\n");
@@ -10,8 +11,8 @@ export const massageString = (str: string) => {
     .join("\n");
 };
 
-const getWhiteSpaceToTrim = (str: string[]) =>
-  str.reduce((acc, line) => {
+const getWhiteSpaceToTrim = (lines: string[]) =>
+  lines.reduce((acc, line) => {
     if (!line.trim()) {
       return acc;
     }

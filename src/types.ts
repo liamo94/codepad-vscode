@@ -1,4 +1,4 @@
-export interface Snippet {
+export interface Snippet extends SnippetMetaData {
   snippet: string;
   title?: string;
   description?: string;
@@ -9,6 +9,11 @@ export interface Snippet {
   createdAt: string;
   lines: [from: number, to: number];
   git?: Git;
+}
+
+export interface SnippetMetaData {
+  loc?: string;
+  fileSize?: number;
 }
 
 export interface Git {

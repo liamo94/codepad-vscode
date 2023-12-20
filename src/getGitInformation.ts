@@ -7,7 +7,7 @@ const isGit = (fullFilePath: string) =>
     .trim() === "true";
 
 const createUrl = (url: string, commitHash: string) =>
-  `${url}/commit/${commitHash}`;
+  `https://www.${url}/commit/${commitHash}`;
 
 const runGitCommand = (fullFilePath: string, command: string) =>
   execSync(`(cd ${fullFilePath} && ${command})`).toString().trim();
@@ -22,14 +22,14 @@ const getShareableLink = (
   const relativePath = fullFilePath.replace(repoPath, "");
   const lines =
     fromLine === toLine ? `L${fromLine}` : `L${fromLine}-L${toLine}`;
-  return `${url}/blob/${commitHash}${relativePath}#${lines}`;
+  return `https://www.${url}/blob/${commitHash}${relativePath}#${lines}`;
 };
 
-export const getGitInformation = async (
+export const getGitInformation = (
   fullFilePath: string,
   rootToFile: string,
   selectedLines: [from: number, to: number]
-): Promise<Git | undefined> => {
+): Git | undefined => {
   if (!isGit(fullFilePath)) {
     return undefined;
   }
@@ -43,7 +43,7 @@ export const getGitInformation = async (
   const lineCommitHash = runGitCommand(
     fullFilePath,
     `git log -L ${selectedLines[0]},${selectedLines[0]}:${rootToFile} | awk '/^commit/ {print $2}'`
-  );
+  ).split("\n")[0];
 
   const repository = runGitCommand(
     fullFilePath,

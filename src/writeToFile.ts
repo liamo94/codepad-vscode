@@ -1,9 +1,9 @@
-import { existsSync, mkdirSync, writeFile, writeFileSync, promises } from "fs";
+import * as vscode from "vscode";
+import { existsSync, mkdirSync, writeFileSync } from "fs";
+import { format } from "prettier";
 import { Snippet } from "./types";
 import { generateMD } from "./generateMD";
-import { execSync } from "child_process";
-import path from "path";
-import { format } from "prettier";
+import { saveRawJSON } from "./saveRawJSON";
 
 export const writeSnippetToFile = async ({
   directoryPath,
@@ -11,18 +11,18 @@ export const writeSnippetToFile = async ({
   snippet,
   directoryName,
   rootPath,
-  isGit,
 }: {
   snippet: Snippet;
   directoryPath?: string;
   filePath: string;
   directoryName?: string;
   rootPath?: string;
-  isGit?: boolean;
 }) => {
-  // if directory name is set, save to this dir. Else, if they have no directoryName set this indicates save next to file
+  const { includeGitDetails } = vscode.workspace.getConfiguration("codepad");
+  // if directory name is set, save to this dir.
+  // Else, if they have no directoryName set this indicates save next to file
   const dir = directoryPath || (directoryName ? rootPath : filePath);
-  const stringSnippet = await format(generateMD(snippet, isGit), {
+  const stringSnippet = await format(generateMD(snippet, includeGitDetails), {
     parser: "markdown",
   });
   const fileName = snippet.title
@@ -34,9 +34,13 @@ export const writeSnippetToFile = async ({
     mkdirSync(directory, { recursive: true });
   }
   const file = `${directory}${fileName}.md`;
-  //TODO see if we want to open the file
 
   writeFileSync(file, stringSnippet);
+  await saveRawJSON(snippet, directory, fileName);
+
+  vscode.window.showInformationMessage(
+    `Snippet ${fileName} successfully created`
+  );
 
   return file;
 };

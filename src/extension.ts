@@ -1,13 +1,9 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from "vscode";
-import { execSync } from "child_process";
-import { existsSync, mkdirSync, writeFileSync } from "fs";
-import { Git, Snippet } from "./types";
-import { homedir } from "os";
-import { getGitInformation } from "./getGitInformation";
-import { generateMD } from "./generateMD";
+import { dirname } from "path";
 import { writeSnippetToFile } from "./writeToFile";
-import path = require("path");
+import { getDescription, getTitle } from "./details";
+import { generateSnippet } from "./createSnippet";
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
@@ -18,126 +14,88 @@ export function activate(context: vscode.ExtensionContext) {
   // The command has been defined in the package.json file
   // Now provide the implementation of the command with registerCommand
   // The commandId parameter must match the command field in package.json
-  let disposable = vscode.commands.registerCommand(
+  const addSnippet = vscode.commands.registerCommand(
     "codepad.addSnippet",
-    async () => {
-      vscode.window.withProgress(
-        {
-          location: vscode.ProgressLocation.Window,
-          cancellable: false,
-          title: "Creating snippet",
-        },
-        // The code you place here will be executed every time your command is executed
-        // Display a message box to the user
-        async (progress) => {
-          progress.report({ increment: 0 });
-
-          let git: Git | undefined;
-
-          const editor = vscode.window.activeTextEditor;
-          const documentText = editor?.document.getText();
-          const rootPath = vscode.workspace.workspaceFolders?.[0].uri.fsPath;
-          const fullFilePathWithFile = editor?.document.fileName;
-          const fullFilePath = path.dirname(fullFilePathWithFile || "");
-
-          const createdAt = new Date().toISOString();
-          const selection = editor?.selection;
-          const {
-            savePath,
-            includeGitDetails,
-            openInIDE,
-            saveRawJSON,
-            directoryName,
-          } = vscode.workspace.getConfiguration("codepad");
-          let snippet = "";
-          if (selection && !selection.isEmpty) {
-            const selectionRange = new vscode.Range(
-              selection.start.line,
-              selection.start.character,
-              selection.end.line,
-              selection.end.character
-            );
-            snippet = editor.document.getText(selectionRange);
-          }
-          if (!snippet) {
-            return vscode.window.showInformationMessage(
-              "No code snippet selected"
-            );
-          }
-          const title = await getTitle();
-          const description = await getDescription();
-
-          if (title === undefined) {
-            return;
-          }
-
-          try {
-            console.log(rootPath);
-            progress.report({ increment: 100 });
-            if (selection && !selection.isEmpty && rootPath) {
-              git = await getGitInformation(
-                rootPath,
-                fullFilePathWithFile || "",
-                [selection.start.line + 1, selection.end.line + 1]
-              );
-              console.log(JSON.stringify(git));
-            }
-
-            vscode.window.showInformationMessage("hey", JSON.stringify(git));
-            const snippetObj: Snippet = {
-              snippet,
-              createdAt,
-              fileName: fullFilePathWithFile?.split("/").pop() || "",
-              fullFilePath: fullFilePathWithFile || "",
-              title,
-              description,
-              git,
-              lines: [selection!.start.line + 1, selection!.end.line + 1],
-            };
-            await writeSnippetToFile({
-              snippet: snippetObj,
-              directoryPath: savePath,
-              filePath: fullFilePath || "",
-              isGit: includeGitDetails,
-              directoryName,
-              rootPath,
-            });
-          } catch (e) {
-            console.log(e);
-            progress.report({ increment: 100 });
-            const text = execSync("pwd").toString().trim();
-            console.log(text);
-            vscode.window.showErrorMessage("There was an error", text);
-          } finally {
-            progress.report({ increment: 100 });
-          }
-        }
-      );
-    }
+    runExtension
   );
 
-  let disposable2 = vscode.commands.registerCommand(
+  const addSnippetWithTitle = vscode.commands.registerCommand(
     "codepad.addSnippetWithTitle",
-    async () => {
-      vscode.window.showInformationMessage("nice one");
-    }
+    () => runExtension(true)
   );
 
-  context.subscriptions.push(disposable);
-  context.subscriptions.push(disposable2);
+  context.subscriptions.push(addSnippet);
+  context.subscriptions.push(addSnippetWithTitle);
 }
 
 // This method is called when your extension is deactivated
 export function deactivate() {}
 
-const getTitle = async () =>
-  await vscode.window.showInputBox({
-    placeHolder: "Title",
-    prompt: "Set title for snippet",
-  });
+const runExtension = async (askForDetails = false) => {
+  vscode.window.withProgress(
+    {
+      location: vscode.ProgressLocation.Window,
+      cancellable: false,
+      title: "Creating snippet",
+    },
+    // The code you place here will be executed every time your command is executed
+    // Display a message box to the user
+    async (progress) => {
+      progress.report({ increment: 0 });
 
-const getDescription = async () =>
-  await vscode.window.showInputBox({
-    placeHolder: "Description (optional)",
-    prompt: "Add a description for the snippet",
-  });
+      const editor = vscode.window.activeTextEditor;
+      const rootPath = vscode.workspace.workspaceFolders?.[0].uri.fsPath;
+      const fullFilePathWithFile = editor?.document.fileName;
+      const fullFilePath = dirname(fullFilePathWithFile || "");
+
+      const selection = editor?.selection;
+      const { savePath, directoryName, openInIDE } =
+        vscode.workspace.getConfiguration("codepad");
+
+      if (selection && !selection.isEmpty) {
+        const selectionRange = new vscode.Range(
+          selection.start.line,
+          selection.start.character,
+          selection.end.line,
+          selection.end.character
+        );
+        if (!editor.document.getText(selectionRange)) {
+          return vscode.window.showInformationMessage(
+            "No code snippet selected"
+          );
+        }
+      }
+
+      const title = askForDetails ? await getTitle() : "";
+      const description = askForDetails ? await getDescription() : "";
+
+      if (title === undefined) {
+        return;
+      }
+
+      try {
+        progress.report({ increment: 100 });
+
+        const snippet = await generateSnippet(title, description);
+        const path = await writeSnippetToFile({
+          snippet,
+          directoryPath: savePath,
+          filePath: fullFilePath || "",
+          directoryName,
+          rootPath,
+        });
+        if (openInIDE) {
+          const vsCodePath = vscode.Uri.parse(path);
+          vscode.window.showTextDocument(vsCodePath);
+        }
+      } catch (e) {
+        progress.report({ increment: 100 });
+        vscode.window.showErrorMessage(
+          "There was an error generating code snippet"
+        );
+      } finally {
+        progress.report({ increment: 100 });
+      }
+    }
+  );
+};
