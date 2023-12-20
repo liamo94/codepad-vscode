@@ -1,5 +1,5 @@
 import { execSync } from "child_process";
-import { Git } from "./types";
+import { Git, LineRange } from "./types";
 
 const isGit = (fullFilePath: string) =>
   execSync(`(cd ${fullFilePath} && git rev-parse --is-inside-work-tree)`)
@@ -17,7 +17,7 @@ const getShareableLink = (
   commitHash: string,
   repoPath: string,
   fullFilePath: string,
-  [fromLine, toLine]: [from: number, to: number]
+  [fromLine, toLine]: LineRange
 ) => {
   const relativePath = fullFilePath.replace(repoPath, "");
   const lines =
@@ -28,11 +28,9 @@ const getShareableLink = (
 export const getGitInformation = (
   fullFilePath: string,
   rootToFile: string,
-  selectedLines: [from: number, to: number]
+  selectedLines: LineRange
 ): Git | undefined => {
-  if (!isGit(fullFilePath)) {
-    return undefined;
-  }
+  if (!isGit(fullFilePath)) return undefined;
 
   const fileCommitHash = runGitCommand(
     fullFilePath,

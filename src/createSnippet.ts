@@ -1,4 +1,3 @@
-import { dirname } from "path";
 import { Snippet } from "./types";
 import * as vscode from "vscode";
 import { getGitInformation } from "./getGitInformation";
@@ -11,7 +10,7 @@ export const generateSnippet = async (
   const editor = vscode.window.activeTextEditor;
   const rootPath = vscode.workspace.workspaceFolders?.[0].uri.fsPath;
   const fullFilePathWithFile = editor?.document.fileName;
-  const fullFilePath = dirname(fullFilePathWithFile || "");
+  //   const fullFilePath = dirname(fullFilePathWithFile || "");
   const selection = editor!.selection;
   const createdAt = new Date().toISOString();
 

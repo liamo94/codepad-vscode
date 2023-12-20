@@ -4,6 +4,7 @@ import { dirname } from "path";
 import { writeSnippetToFile } from "./writeToFile";
 import { getDescription, getTitle } from "./details";
 import { generateSnippet } from "./createSnippet";
+import { codepad } from "./types";
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
@@ -50,7 +51,7 @@ const runExtension = async (askForDetails = false) => {
 
       const selection = editor?.selection;
       const { savePath, directoryName, openInIDE } =
-        vscode.workspace.getConfiguration("codepad");
+        vscode.workspace.getConfiguration(codepad);
 
       if (selection && !selection.isEmpty) {
         const selectionRange = new vscode.Range(
@@ -69,9 +70,7 @@ const runExtension = async (askForDetails = false) => {
       const title = askForDetails ? await getTitle() : "";
       const description = askForDetails ? await getDescription() : "";
 
-      if (title === undefined) {
-        return;
-      }
+      if (title === undefined) return;
 
       try {
         progress.report({ increment: 100 });

@@ -221,9 +221,7 @@ const specialFiles: Record<string, string> = {
 };
 
 export const getLanguageFromAlias = (fileName: string, extension?: string) => {
-  if (!extension) {
-    return specialFiles[fileName] || "";
-  }
-  //Create a dict of all aliases to their language
+  if (!extension) return specialFiles[fileName] || "";
+
   return specialFiles[fileName] || extensionMap[extension.substring(1)] || "";
 };

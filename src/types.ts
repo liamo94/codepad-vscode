@@ -7,7 +7,7 @@ export interface Snippet extends SnippetMetaData {
   fileName: string;
   fullFilePath: string;
   createdAt: string;
-  lines: [from: number, to: number];
+  lines: LineRange;
   git?: Git;
 }
 
@@ -27,3 +27,7 @@ export interface Git {
   branch: string;
   shareableLink: string;
 }
+
+export type LineRange = [from: number, to: number];
+
+export const codepad = "codepad";

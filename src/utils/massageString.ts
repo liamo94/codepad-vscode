@@ -13,8 +13,6 @@ export const massageString = (str: string) => {
 
 const getWhiteSpaceToTrim = (lines: string[]) =>
   lines.reduce((acc, line) => {
-    if (!line.trim()) {
-      return acc;
-    }
+    if (!line.trim()) return acc;
     return Math.min(acc, line.search(/\S/));
   }, Infinity);

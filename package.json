@@ -1,5 +1,5 @@
 {
-  "name": "codepad",
+  "name": "codepad-vscode",
   "description": "Save detailed code blocks from within VS Code",
   "author": "Liam O'Donnell",
   "displayName": "CodePad",
@@ -17,6 +17,15 @@
     "Notebooks",
     "Snippets"
   ],
+  "scripts": {
+    "vscode:prepublish": "yarn run compile",
+    "compile": "tsc -p ./ && yarn copy-files",
+    "watch": "tsc -watch -p ./",
+    "pretest": "yarn run compile && yarn run lint",
+    "lint": "eslint .",
+    "test": "jest",
+    "copy-files": "rm -rf out/md && cp -r src/md out/md"
+  },
   "activationEvents": [],
   "main": "./out/extension.js",
   "contributes": {
@@ -67,15 +76,6 @@
         "when": "editorTextFocus"
       }
     ]
-  },
-  "scripts": {
-    "vscode:prepublish": "yarn run compile",
-    "compile": "tsc -p ./ && yarn copy-files",
-    "watch": "tsc -watch -p ./",
-    "pretest": "yarn run compile && yarn run lint",
-    "lint": "eslint src --ext ts",
-    "test": "jest",
-    "copy-files": "rm -rf out/md && cp -r src/md out/md"
   },
   "devDependencies": {
     "@babel/core": "^7.23.6",

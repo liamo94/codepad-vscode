@@ -1,0 +1,4 @@
+out
+dist
+**/*.d.ts
+.eslintrc.js
