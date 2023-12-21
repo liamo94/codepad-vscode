@@ -52,7 +52,7 @@ export class SnipperExplorer implements vscode.TreeDataProvider<Snippet> {
     return Promise.resolve(
       Object.entries(files).map(
         ([title, language]) =>
-          new Snippet(`${title} | ${language}`, language, {
+          new Snippet(`${title} | ${language}`, title, {
             command: "codepad.openSnippet",
             title,
             arguments: [title],
@@ -65,7 +65,7 @@ export class SnipperExplorer implements vscode.TreeDataProvider<Snippet> {
 export class Snippet extends vscode.TreeItem {
   constructor(
     public readonly label: string,
-    public readonly language: string,
+    public readonly title: string,
     public readonly command?: vscode.Command
   ) {
     super(label, vscode.TreeItemCollapsibleState.None);
@@ -74,5 +74,5 @@ export class Snippet extends vscode.TreeItem {
     // this.tooltip = `${this.label} | ${this.language}`;
   }
 
-  contextValue = "snippets";
+  contextValue = "snippet";
 }

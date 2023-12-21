@@ -22,6 +22,7 @@ const replaceMdVariables = (
     description,
     title,
     git,
+    relativePath,
   }: Snippet,
   md: string,
   includeGit?: boolean
@@ -36,6 +37,7 @@ const replaceMdVariables = (
     .replace("{{createdAt}}", new Date(createdAt).toLocaleDateString())
     .replace("{{fileName}}", fileName)
     .replace("{{fullFilePath}}", fullFilePath)
+    .replace("{{relativePath}}", relativePath)
     .replace("{{fileSize}}", fileSize.toString())
     .replace("{{loc}}", loc.toString())
     .replace("{{snippet}}", snippet)

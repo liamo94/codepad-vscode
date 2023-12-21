@@ -61,6 +61,10 @@
           "light": "media/light/refresh.svg",
           "dark": "media/dark/refresh.svg"
         }
+      },
+      {
+        "command": "codepad.deleteEntry",
+        "title": "Delete"
       }
     ],
     "configuration": {
@@ -106,6 +110,12 @@
           "command": "codepad.refreshEntry",
           "when": "view == snippets",
           "group": "navigation"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "codepad.deleteEntry",
+          "when": "view == snippets && viewItem == snippet"
         }
       ]
     }

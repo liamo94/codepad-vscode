@@ -64,8 +64,8 @@ export const getGitInformation = (
     repository,
     lineCommitHash,
     ssh,
-    url,
     branch,
+    url: `https://www.${url}`,
     fileCommitUrl: createUrl(url, fileCommitHash),
     lineCommitUrl: createUrl(url, lineCommitHash),
     shareableLink: getShareableLink(

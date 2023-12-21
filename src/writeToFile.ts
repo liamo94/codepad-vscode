@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { existsSync, mkdirSync, writeFileSync } from "fs";
+import { accessSync, existsSync, mkdirSync, writeFileSync } from "fs";
 import { format } from "prettier";
 import { Snippet, codepad } from "./types";
 import { generateMD } from "./generateMD";
@@ -25,11 +25,16 @@ export const writeSnippetToFile = async ({
   const stringSnippet = await format(generateMD(snippet, includeGitDetails), {
     parser: "markdown",
   });
-  const fileName = snippet.title
+  let fileName = snippet.title
     ? `${snippet.title.replace(/ /g, "_")}_${generateUID()}`
-    : snippet.fileName;
+    : snippet.fileExtension
+      ? snippet.fileName.split(snippet.fileExtension)[0]
+      : snippet.fileName;
 
   const directory = `${dir}/${directoryName ? `${directoryName}/` : ""}`;
+  if (!ensureFileNameSafe(directory, fileName)) {
+    fileName += `_${generateUID()}`;
+  }
   if (!existsSync(directory)) {
     mkdirSync(directory, { recursive: true });
   }
@@ -52,4 +57,17 @@ const generateUID = () => {
   firstPart = ("000" + firstPart.toString(36)).slice(-3);
   secondPart = ("000" + secondPart.toString(36)).slice(-3);
   return (firstPart + secondPart).toUpperCase();
+};
+
+const ensureFileNameSafe = (
+  directory: string,
+  fileName: string,
+  extension = "md"
+) => {
+  try {
+    accessSync(`${directory}/${fileName}.${extension}`);
+    return false;
+  } catch {
+    return true;
+  }
 };

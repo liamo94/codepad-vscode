@@ -1,5 +1,6 @@
 export interface Snippet extends SnippetMetaData {
   snippet: string;
+  relativePath: string;
   title?: string;
   description?: string;
   fileExtension?: string;
