@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import * as path from "path";
+import { join } from "path";
 import { readFileSync, readdirSync } from "fs";
 import { codepad } from "../types";
 import { getSnippetDirectory } from "../fs";
@@ -15,12 +15,13 @@ export class SnipperExplorer implements vscode.TreeDataProvider<Snippet> {
   readonly userConfiguration = vscode.workspace.getConfiguration(codepad);
   readonly savePath = this.userConfiguration.savePath;
   readonly directoryName = this.userConfiguration.directoryName;
-  readonly directory = getSnippetDirectory();
+  directory = getSnippetDirectory();
 
   constructor(private workspaceRoot: string | undefined) {}
 
   refresh(): void {
     this._onDidChangeTreeData.fire();
+    this.directory = getSnippetDirectory();
   }
 
   getTreeItem(element: Snippet): vscode.TreeItem {
@@ -28,13 +29,16 @@ export class SnipperExplorer implements vscode.TreeDataProvider<Snippet> {
   }
 
   readTextFiles(directoryPath: string) {
+    console.log("directoryPath", directoryPath, this.directory);
     // Read the list of files in the specified directory
     //   const fileContentsMap: Record<string, string> = {};
-    const files = readdirSync(directoryPath);
+    const files = readdirSync(directoryPath, { withFileTypes: true })
+      .filter((f) => f.isFile() && f.name.endsWith(".md"))
+      .map((dirent) => dirent.name);
 
     return files.reduce<Record<string, string>>((acc, val) => {
       // TODO we could show data inside the snippet
-      const filePath = path.join(directoryPath, val);
+      const filePath = join(directoryPath, val);
       const contents = readFileSync(filePath);
       const md = contents.toString();
       const language = md.split("- **Language**: ")[1].split("\n")[0] || "";

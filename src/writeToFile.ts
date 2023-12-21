@@ -1,5 +1,6 @@
 import * as vscode from "vscode";
 import { accessSync, existsSync, mkdirSync, writeFileSync } from "fs";
+import { join } from "path";
 import { format } from "prettier";
 import { Snippet, codepad } from "./types";
 import { generateMD } from "./generateMD";
@@ -31,15 +32,15 @@ export const writeSnippetToFile = async ({
       ? snippet.fileName.split(snippet.fileExtension)[0]
       : snippet.fileName;
 
-  const directory = `${dir}/${directoryName ? `${directoryName}/` : ""}`;
+  const directory = join(dir || "", directoryName || "");
   if (!ensureFileNameSafe(directory, fileName)) {
     fileName += `_${generateUID()}`;
   }
-  if (!existsSync(directory)) {
+  if (directory && !existsSync(directory)) {
     mkdirSync(directory, { recursive: true });
   }
 
-  const file = `${directory}${fileName}.md`;
+  const file = `${join(directory, fileName)}.md`;
 
   writeFileSync(file, stringSnippet);
   await saveRawJSON(snippet, directory, fileName);
@@ -65,7 +66,7 @@ const ensureFileNameSafe = (
   extension = "md"
 ) => {
   try {
-    accessSync(`${directory}/${fileName}.${extension}`);
+    accessSync(`${join(directory, fileName)}.${extension}`);
     return false;
   } catch {
     return true;

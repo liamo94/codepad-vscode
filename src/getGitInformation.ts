@@ -38,10 +38,18 @@ export const getGitInformation = (
   );
 
   //this may not be working correctly
-  const lineCommitHash = runGitCommand(
-    fullFilePath,
-    `git log -L ${selectedLines[0]},${selectedLines[0]}:${rootToFile} | awk '/^commit/ {print $2}'`
-  ).split("\n")[0];
+  const getLineCommandHash = () => {
+    try {
+      return runGitCommand(
+        fullFilePath,
+        `git log -L ${selectedLines[0]},${selectedLines[0]}:${rootToFile} | awk '/^commit/ {print $2}'`
+      ).split("\n")[0];
+    } catch (e) {
+      return "";
+    }
+  };
+
+  const lineCommitHash = getLineCommandHash();
 
   const repository = runGitCommand(
     fullFilePath,
@@ -67,7 +75,7 @@ export const getGitInformation = (
     branch,
     url: `https://www.${url}`,
     fileCommitUrl: createUrl(url, fileCommitHash),
-    lineCommitUrl: createUrl(url, lineCommitHash),
+    lineCommitUrl: lineCommitHash ? createUrl(url, lineCommitHash) : "",
     shareableLink: getShareableLink(
       url,
       currentCommitHash,

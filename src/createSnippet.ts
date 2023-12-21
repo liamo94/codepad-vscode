@@ -44,6 +44,7 @@ export const generateSnippet = async (
   const snippetObj: Snippet = {
     snippet,
     createdAt,
+    //todo use fs to get file name
     fileName: fullFilePathWithFile?.split("/").pop() || "",
     fullFilePath: fullFilePathWithFile || "",
     title,

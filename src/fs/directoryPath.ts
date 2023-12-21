@@ -1,4 +1,5 @@
 import * as vscode from "vscode";
+import { join } from "path";
 import { codepad } from "../types";
 
 export const getSnippetDirectory = () => {
@@ -6,5 +7,5 @@ export const getSnippetDirectory = () => {
   const rootPath = vscode.workspace.workspaceFolders?.[0].uri.fsPath;
   const savePath = userConfiguration.savePath;
   const directoryName = userConfiguration.directoryName;
-  return `${savePath || rootPath}/${directoryName}`;
+  return join(savePath || rootPath, directoryName);
 };

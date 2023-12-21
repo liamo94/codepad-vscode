@@ -47,6 +47,17 @@ export function activate(context: vscode.ExtensionContext) {
 
   context.subscriptions.push(addSnippet);
   context.subscriptions.push(addSnippetWithTitle);
+
+  vscode.workspace.onDidChangeConfiguration(
+    (event: vscode.ConfigurationChangeEvent) => {
+      if (
+        event.affectsConfiguration("codepad.directoryName") ||
+        event.affectsConfiguration("codepad.savePath")
+      ) {
+        vscode.commands.executeCommand("codepad.refreshEntry");
+      }
+    }
+  );
 }
 
 // This method is called when your extension is deactivated
@@ -128,11 +139,3 @@ const runExtension = async (
     }
   );
 };
-
-/**
- * TODO:
- * - Set file name as title - if exists already add uuid to the end
- * - Set the following:
- *   - **Workspace path**: {{workspacePath}}
- *   - **Path**: [{{fileName}}]({{fullFilePath}})
- */
