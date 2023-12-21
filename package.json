@@ -73,12 +73,12 @@
       "properties": {
         "codepad.savePath": {
           "type": "string",
-          "description": "Path to save code snippet."
+          "description": "Path to save code snippet. Leave blank to save by your current IDE directory."
         },
         "codepad.directoryName": {
           "type": "string",
           "default": ".vscode/snippets",
-          "description": "Folder to save code snippets in. Leave blank to save by file."
+          "description": "Folder to save code snippets in. Leave blank to save by file (only if no save path is set)."
         },
         "codepad.includeGitDetails": {
           "type": "boolean",
@@ -93,7 +93,7 @@
         "codepad.saveRawJSON": {
           "type": "boolean",
           "default": false,
-          "description": "Save the JSON of the data used to generate your snippet"
+          "description": "Save the raw JSON of the data used to generate your snippet."
         }
       }
     },
