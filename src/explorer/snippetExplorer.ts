@@ -29,7 +29,6 @@ export class SnipperExplorer implements vscode.TreeDataProvider<Snippet> {
   }
 
   readTextFiles(directoryPath: string) {
-    console.log("directoryPath", directoryPath, this.directory);
     // Read the list of files in the specified directory
     //   const fileContentsMap: Record<string, string> = {};
     const files = readdirSync(directoryPath, { withFileTypes: true })
