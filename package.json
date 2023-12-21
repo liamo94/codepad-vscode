@@ -29,6 +29,22 @@
   "activationEvents": [],
   "main": "./out/extension.js",
   "contributes": {
+    "views": {
+      "explorer": [
+        {
+          "id": "snippets",
+          "name": "Codepad: snippets",
+          "icon": "media/dep.svg",
+          "contextualTitle": "Snippets"
+        }
+      ]
+    },
+    "viewsWelcome": [
+      {
+        "view": "snippets",
+        "contents": "No snippets found in project. Ensure you have a save path and/or directory set to see all snippets."
+      }
+    ],
     "commands": [
       {
         "command": "codepad.addSnippet",
@@ -37,6 +53,14 @@
       {
         "command": "codepad.addSnippetWithTitle",
         "title": "Codepad: Add snippet (with title, description)"
+      },
+      {
+        "command": "codepad.refreshEntry",
+        "title": "Codepad: Refresh",
+        "icon": {
+          "light": "media/light/refresh.svg",
+          "dark": "media/dark/refresh.svg"
+        }
       }
     ],
     "configuration": {
@@ -75,7 +99,16 @@
         "mac": "shift+cmd+'",
         "when": "editorTextFocus"
       }
-    ]
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "codepad.refreshEntry",
+          "when": "view == snippets",
+          "group": "navigation"
+        }
+      ]
+    }
   },
   "devDependencies": {
     "@babel/core": "^7.23.6",

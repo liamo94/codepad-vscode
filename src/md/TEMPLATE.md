@@ -15,7 +15,8 @@
 ## File information
 
 - **Name**: {{fileName}}
-- **Path**: {{fullFilePath}}
+- **Workspace path**: {{workspacePath}}
+- **Path**: [{{fileName}}]({{fullFilePath}})
 - **Size**: {{fileSize}}bytes | {{loc}} loc
 - **Language**: {{fileType}}
 - **Extension**: {{fileExtension}}

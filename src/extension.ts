@@ -5,12 +5,27 @@ import { writeSnippetToFile } from "./writeToFile";
 import { getDescription, getTitle } from "./details";
 import { generateSnippet } from "./createSnippet";
 import { codepad } from "./types";
+import { SnipperExplorer } from "./explorer";
+import { getSnippetDirectory } from "./fs";
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
   // Use the console to output diagnostic information (console.log) and errors (console.error)
   // This line of code will only be executed once when your extension is activated
   console.log('Congratulations, your extension "codepad" is now active!');
+  const rootPath = vscode.workspace.workspaceFolders?.[0].uri.fsPath;
+
+  const snippetsExplorerProvider = new SnipperExplorer(rootPath);
+  vscode.window.registerTreeDataProvider("snippets", snippetsExplorerProvider);
+  vscode.commands.registerCommand("codepad.refreshEntry", () =>
+    snippetsExplorerProvider.refresh()
+  );
+  vscode.commands.registerCommand("codepad.openSnippet", (selectedSnippet) => {
+    const directory = getSnippetDirectory();
+    const file = `${directory}/${selectedSnippet}`;
+    const vsCodePath = vscode.Uri.parse(file);
+    vscode.window.showTextDocument(vsCodePath);
+  });
 
   // The command has been defined in the package.json file
   // Now provide the implementation of the command with registerCommand
@@ -98,3 +113,11 @@ const runExtension = async (askForDetails = false) => {
     }
   );
 };
+
+/**
+ * TODO:
+ * - Set file name as title - if exists already add uuid to the end
+ * - Set the following:
+ *   - **Workspace path**: {{workspacePath}}
+ *   - **Path**: [{{fileName}}]({{fullFilePath}})
+ */

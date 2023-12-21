@@ -27,7 +27,7 @@ export const writeSnippetToFile = async ({
   });
   const fileName = snippet.title
     ? `${snippet.title.replace(/ /g, "_")}_${generateUID()}`
-    : snippet.createdAt;
+    : snippet.fileName;
 
   const directory = `${dir}/${directoryName ? `${directoryName}/` : ""}`;
   if (!existsSync(directory)) {
