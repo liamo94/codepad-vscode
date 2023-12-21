@@ -1,9 +1,10 @@
 {
-  "name": "codepad-vscode",
+  "name": "codepad",
   "description": "Save detailed code blocks from within VS Code",
   "author": "Liam O'Donnell",
   "displayName": "CodePad",
   "logo": "media/logo.png",
+  "publisher": "liamoco",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/liamo94/codepad-vscode.git"

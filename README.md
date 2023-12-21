@@ -2,8 +2,6 @@
 
 **Seamlessly create detailed snippets from within VS code**
 
-[Video example](https://github.com/liamo94/codepad-vscode/assets/9355016/5621cbac-5c3c-4fca-ad02-06a336003706)
-
 Add snippets with one keyboard shortcut - its never been easier to take notes from within a codebase.
 
 Choose to store the snippets next to your file, inside your open directory or any location of your choice.
