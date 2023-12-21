@@ -32,6 +32,8 @@ export const writeSnippetToFile = async ({
       ? snippet.fileName.split(snippet.fileExtension)[0]
       : snippet.fileName;
 
+  let jsonFileName = fileName;
+
   const directory = join(dir || "", directoryName || "");
   if (!ensureFileNameSafe(directory, fileName)) {
     fileName += `_${generateUID()}`;
@@ -43,7 +45,10 @@ export const writeSnippetToFile = async ({
   const file = `${join(directory, fileName)}.md`;
 
   writeFileSync(file, stringSnippet);
-  await saveRawJSON(snippet, directory, fileName);
+  if (!ensureFileNameSafe(directory, fileName, "json")) {
+    jsonFileName += `_${generateUID()}`;
+  }
+  await saveRawJSON(snippet, directory, jsonFileName);
 
   vscode.window.showInformationMessage(
     `Snippet ${fileName} successfully created`

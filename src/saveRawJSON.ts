@@ -1,5 +1,6 @@
 import * as vscode from "vscode";
 import { format } from "prettier";
+import { join } from "path";
 import { writeFileSync } from "fs";
 import { Snippet, codepad } from "./types";
 
@@ -14,7 +15,7 @@ export const saveRawJSON = async (
   const formattedSnippet = await format(JSON.stringify(snippet), {
     parser: "json",
   });
-  const filePath = `${directory}${fileName}.json`;
+  const filePath = `${join(directory, fileName)}.json`;
   writeFileSync(filePath, formattedSnippet);
   return filePath;
 };

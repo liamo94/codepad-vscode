@@ -9,8 +9,14 @@ const isGit = (fullFilePath: string) =>
 const createUrl = (url: string, commitHash: string) =>
   `https://www.${url}/commit/${commitHash}`;
 
-const runGitCommand = (fullFilePath: string, command: string) =>
-  execSync(`(cd ${fullFilePath} && ${command})`).toString().trim();
+const runGitCommand = (fullFilePath: string, command: string) => {
+  // Wrap in a try/catch as if the file is untracked then there could be issues with git
+  try {
+    return execSync(`(cd ${fullFilePath} && ${command})`).toString().trim();
+  } catch (e) {
+    return "";
+  }
+};
 
 const getShareableLink = (
   url: string,
@@ -37,19 +43,11 @@ export const getGitInformation = (
     `git log -n 1 --pretty=format:%H -- ${rootToFile}`
   );
 
-  //this may not be working correctly
-  const getLineCommandHash = () => {
-    try {
-      return runGitCommand(
-        fullFilePath,
-        `git log -L ${selectedLines[0]},${selectedLines[0]}:${rootToFile} | awk '/^commit/ {print $2}'`
-      ).split("\n")[0];
-    } catch (e) {
-      return "";
-    }
-  };
-
-  const lineCommitHash = getLineCommandHash();
+  const lineCommitHash =
+    runGitCommand(
+      fullFilePath,
+      `git log -L ${selectedLines[0]},${selectedLines[0]}:${rootToFile} | awk '/^commit/ {print $2}'`
+    ).split("\n")[0] || "";
 
   const repository = runGitCommand(
     fullFilePath,
