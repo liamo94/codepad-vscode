@@ -130,9 +130,7 @@ const runExtension = async (
         snippetsExplorerProvider.refresh();
       } catch (e) {
         progress.report({ increment: 100 });
-        vscode.window.showErrorMessage(
-          "There was an error generating code snippet"
-        );
+        vscode.window.showErrorMessage((e as Error).message);
       } finally {
         progress.report({ increment: 100 });
       }
