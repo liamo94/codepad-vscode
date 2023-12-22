@@ -3,7 +3,7 @@
   "description": "Save detailed code blocks from within VS Code",
   "author": "Liam O'Donnell",
   "displayName": "CodePad",
-  "logo": "media/logo.png",
+  "icon": "media/logo.png",
   "publisher": "liamoco",
   "repository": {
     "type": "git",
@@ -11,7 +11,7 @@
   },
   "license": "MIT",
   "private": false,
-  "version": "0.1.1",
+  "version": "0.1.2",
   "engines": {
     "vscode": "^1.85.0"
   },
