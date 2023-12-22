@@ -1,5 +1,9 @@
 # Change Log
 
+## [0.1.4]
+
+- Fix for generating snippet name
+
 ## [0.1.3]
 
 - Code formatter bug fix

@@ -27,10 +27,10 @@ export const writeSnippetToFile = async ({
     parser: "markdown",
   });
   let fileName = snippet.title
-    ? `${snippet.title.replace(/ /g, "_")}_${generateUID()}`
+    ? snippet.title.replace(/ /g, "_")
     : snippet.fileExtension
-      ? snippet.fileName.split(snippet.fileExtension)[0]
-      : snippet.fileName;
+    ? snippet.fileName.split(snippet.fileExtension)[0]
+    : snippet.fileName;
 
   let jsonFileName = fileName;
 
