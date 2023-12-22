@@ -1,5 +1,9 @@
 # Change Log
 
+## [0.1.3]
+
+- Code formatter bug fix
+
 ## [0.1.2]
 
 - Update logo
