@@ -2,11 +2,7 @@
 
 **Seamlessly create detailed snippets from within VS code**
 
-
-
-https://github.com/liamo94/codepad-vscode/assets/9355016/c897c725-2c1a-4d1d-a94d-6e2e7e2e12fa
-
-
+<img width="1506" alt="Screenshot 2023-12-22 at 00 00 29" src="https://github.com/liamo94/codepad-vscode/assets/9355016/8c1d6c74-69cf-42c5-920e-a79fc9d2632a">
 
 Add snippets with one keyboard shortcut - its never been easier to take notes from within a codebase.
 
@@ -40,6 +36,15 @@ All snippets are generated in a formatted `markdown` for easy universal viewing 
 
 The source code is available on GitHub [here](https://github.com/liamo94/codepad-vscode)
 
+## Installing
+
+You can install the latest version of the extension via the Visual Studio Marketplace [here](https://marketplace.visualstudio.com/items?itemName=liamoco.codepad).
+
+Alternatively, open Visual Studio code, press `Cmd + P` on Mac or `Ctrl + P` on Windows and type:
+
+> ext install liamoco.codepad
+
+
 ## Controls
 
 ### Save snippet
@@ -57,3 +62,7 @@ You can change this in `Key Bindings` (search `codepad`), as well as setting a s
 You can click a snippet in the `CODEPAD: SNIPPETS` with to open it inside your IDE.
 
 You can also delete the snippet from within the window by right clicking it.
+
+## Demo
+https://github.com/liamo94/codepad-vscode/assets/9355016/c897c725-2c1a-4d1d-a94d-6e2e7e2e12fa
+
