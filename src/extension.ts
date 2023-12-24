@@ -1,20 +1,16 @@
-// Import the module and reference it with the alias vscode in your code below
 import * as vscode from "vscode";
-import { dirname } from "path";
+import { dirname, join } from "path";
 import { unlinkSync } from "fs";
 import { writeSnippetToFile } from "./writeToFile";
 import { getDescription, getTitle } from "./details";
 import { generateSnippet } from "./createSnippet";
 import { codepad } from "./types";
 import { SnipperExplorer } from "./explorer";
-import { getSnippetDirectory } from "./fs";
+import { getSnippetDirectory, getOsPath } from "./fs";
 import { Snippet } from "./explorer/snippetExplorer";
-// This method is called when your extension is activated
-// Your extension is activated the very first time the command is executed
+
 export function activate(context: vscode.ExtensionContext) {
-  // Use the console to output diagnostic information (console.log) and errors (console.error)
-  // This line of code will only be executed once when your extension is activated
-  console.log('Congratulations, your extension "codepad" is now active!');
+  console.log("Codepad is now active");
   const rootPath = vscode.workspace.workspaceFolders?.[0].uri.fsPath;
 
   const snippetsExplorerProvider = new SnipperExplorer(rootPath);
@@ -24,18 +20,15 @@ export function activate(context: vscode.ExtensionContext) {
   );
   vscode.commands.registerCommand("codepad.openSnippet", (selectedSnippet) => {
     const directory = getSnippetDirectory();
-    const file = `${directory}/${selectedSnippet}`;
+    const file = join(directory, selectedSnippet);
     const vsCodePath = vscode.Uri.parse(file);
     vscode.window.showTextDocument(vsCodePath);
   });
   vscode.commands.registerCommand("codepad.deleteEntry", (snippet: Snippet) => {
-    unlinkSync(`${getSnippetDirectory()}/${snippet.title}`);
+    unlinkSync(join(getSnippetDirectory(), snippet.title));
     snippetsExplorerProvider.refresh();
   });
 
-  // The command has been defined in the package.json file
-  // Now provide the implementation of the command with registerCommand
-  // The commandId parameter must match the command field in package.json
   const addSnippet = vscode.commands.registerCommand("codepad.addSnippet", () =>
     runExtension(snippetsExplorerProvider)
   );
@@ -60,7 +53,6 @@ export function activate(context: vscode.ExtensionContext) {
   );
 }
 
-// This method is called when your extension is deactivated
 export function deactivate() {}
 
 const runExtension = async (
@@ -73,8 +65,6 @@ const runExtension = async (
       cancellable: false,
       title: "Creating snippet",
     },
-    // The code you place here will be executed every time your command is executed
-    // Display a message box to the user
     async (progress) => {
       progress.report({ increment: 0 });
 
@@ -110,7 +100,10 @@ const runExtension = async (
       const title = askForDetails ? await getTitle() : "";
       const description = askForDetails ? await getDescription() : "";
 
-      if (title === undefined) return;
+      if (title === undefined) {
+        console.info("No title provided, aborting");
+        return;
+      }
 
       try {
         progress.report({ increment: 100 });
@@ -118,7 +111,7 @@ const runExtension = async (
         const snippet = await generateSnippet(title, description);
         const path = await writeSnippetToFile({
           snippet,
-          directoryPath: savePath,
+          directoryPath: getOsPath(savePath),
           filePath: fullFilePath || "",
           directoryName,
           rootPath,
@@ -131,6 +124,7 @@ const runExtension = async (
       } catch (e) {
         progress.report({ increment: 100 });
         vscode.window.showErrorMessage((e as Error).message);
+        console.error(e);
       } finally {
         progress.report({ increment: 100 });
       }

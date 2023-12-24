@@ -2,7 +2,7 @@ import * as vscode from "vscode";
 import { join } from "path";
 import { readFileSync, readdirSync } from "fs";
 import { codepad } from "../types";
-import { getSnippetDirectory } from "../fs";
+import { getSnippetDirectory, getOsPath } from "../fs";
 
 type Voidable<T> = T | undefined | void;
 
@@ -13,7 +13,7 @@ export class SnipperExplorer implements vscode.TreeDataProvider<Snippet> {
     this._onDidChangeTreeData.event;
 
   readonly userConfiguration = vscode.workspace.getConfiguration(codepad);
-  readonly savePath = this.userConfiguration.savePath;
+  readonly savePath = getOsPath(this.userConfiguration.savePath);
   readonly directoryName = this.userConfiguration.directoryName;
   directory = getSnippetDirectory();
 

@@ -1,14 +1,15 @@
 import { readFileSync } from "fs";
 import { resolve } from "path";
+import * as vscode from "vscode";
 import { getFileExtension, getFileLoc, getFileName, getFileSize } from "./fs";
-import { Git, Snippet } from "./types";
+import { Git, Snippet, codepad } from "./types";
 import { getLanguageFromAlias } from "./utils";
 
-export const generateMD = (snippet: Snippet, includeGit?: boolean) => {
+export const generateMD = (snippet: Snippet) => {
   const templatePath = "./md/TEMPLATE.md";
   const fullTemplatePath = resolve(__dirname, templatePath);
   const data = readFileSync(fullTemplatePath);
-  return replaceMdVariables(snippet, data.toString(), includeGit);
+  return replaceMdVariables(snippet, data.toString());
 };
 
 const replaceMdVariables = (
@@ -24,12 +25,13 @@ const replaceMdVariables = (
     git,
     relativePath,
   }: Snippet,
-  md: string,
-  includeGit?: boolean
+  md: string
 ) => {
+  const { includeGitDetails } = vscode.workspace.getConfiguration(codepad);
+
   const fileSize = getFileSize(fullFilePath);
   const loc = getFileLoc(fullFilePath);
-  const gitMd = includeGit && git ? generateGitMD(git) : "";
+  const gitMd = includeGitDetails && git ? generateGitMD(git) : "";
 
   const markdown = md
     .replace("{{title}}", title || fileName)
@@ -57,7 +59,7 @@ const replaceMdVariables = (
       ) ?? "Unknown"
     )
     .replace("{{lineRange}}", from !== to ? `${from}-${to}` : `L${from}`)
-    .replace("{{lines}}", `${to - from}`);
+    .replace("{{lines}}", `${to - from + 1}`);
   return `${markdown}\n${gitMd}`;
 };
 

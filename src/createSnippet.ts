@@ -1,7 +1,7 @@
 import { Snippet } from "./types";
 import * as vscode from "vscode";
 import { getGitInformation } from "./getGitInformation";
-import { massageSnippet } from "./massageSnippet";
+import { massageSnippet } from "./utils";
 
 export const generateSnippet = async (
   title?: string,

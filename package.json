@@ -2,7 +2,7 @@
   "name": "codepad",
   "description": "Save detailed code blocks from within VS Code",
   "author": "Liam O'Donnell",
-  "displayName": "CodePad",
+  "displayName": "Codepad",
   "icon": "media/logo.png",
   "publisher": "liamoco",
   "repository": {

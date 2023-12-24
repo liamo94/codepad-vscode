@@ -2,7 +2,7 @@ import * as vscode from "vscode";
 import { accessSync, existsSync, mkdirSync, writeFileSync } from "fs";
 import { join } from "path";
 import { format } from "prettier";
-import { Snippet, codepad } from "./types";
+import { Snippet } from "./types";
 import { generateMD } from "./generateMD";
 import { saveRawJSON } from "./saveRawJSON";
 
@@ -19,11 +19,10 @@ export const writeSnippetToFile = async ({
   directoryName?: string;
   rootPath?: string;
 }) => {
-  const { includeGitDetails } = vscode.workspace.getConfiguration(codepad);
   // if directory name is set, save to this dir.
   // Else, if they have no directoryName set this indicates save next to file
   const dir = directoryPath || (directoryName ? rootPath : filePath);
-  const stringSnippet = await format(generateMD(snippet, includeGitDetails), {
+  const stringSnippet = await format(generateMD(snippet), {
     parser: "markdown",
   });
   let fileName = snippet.title

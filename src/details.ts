@@ -3,7 +3,8 @@ import * as vscode from "vscode";
 export const getTitle = async () =>
   await vscode.window.showInputBox({
     placeHolder: "Title",
-    prompt: "Set title for snippet",
+    prompt:
+      "The title you want for your snippet (will be used for the file name)",
   });
 
 export const getDescription = async () =>

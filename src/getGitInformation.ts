@@ -14,6 +14,7 @@ const runGitCommand = (fullFilePath: string, command: string) => {
   try {
     return execSync(`(cd ${fullFilePath} && ${command})`).toString().trim();
   } catch (e) {
+    console.error("Error running git command", e);
     return "";
   }
 };
@@ -36,7 +37,10 @@ export const getGitInformation = (
   rootToFile: string,
   selectedLines: LineRange
 ): Git | undefined => {
-  if (!isGit(fullFilePath)) return undefined;
+  if (!isGit(fullFilePath)) {
+    console.info("No .git detected in repository");
+    return undefined;
+  }
 
   const fileCommitHash = runGitCommand(
     fullFilePath,

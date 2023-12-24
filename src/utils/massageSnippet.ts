@@ -1,6 +1,6 @@
-import { getFileExtension, getFileSize } from "./fs";
-import { Snippet } from "./types";
-import { massageString } from "./utils";
+import { getFileExtension, getFileSize } from "../fs";
+import { Snippet } from "../types";
+import { massageString } from "./massageString";
 
 export const massageSnippet = (snippet: Snippet): Snippet => {
   const fullFilePath = snippet.fullFilePath;
