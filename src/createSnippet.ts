@@ -2,6 +2,7 @@ import { Snippet } from "./types";
 import * as vscode from "vscode";
 import { getGitInformation } from "./getGitInformation";
 import { massageSnippet } from "./utils";
+import { basename } from "path";
 
 export const generateSnippet = async (
   title?: string,
@@ -13,7 +14,6 @@ export const generateSnippet = async (
   const relativePath = vscode.workspace.asRelativePath(
     fullFilePathWithFile || ""
   );
-  //   const fullFilePath = dirname(fullFilePathWithFile || "");
   const selection = editor!.selection;
   const createdAt = new Date().toISOString();
 
@@ -44,8 +44,7 @@ export const generateSnippet = async (
   const snippetObj: Snippet = {
     snippet,
     createdAt,
-    //todo use fs to get file name
-    fileName: fullFilePathWithFile?.split("/").pop() || "",
+    fileName: basename(fullFilePathWithFile || ""),
     fullFilePath: fullFilePathWithFile || "",
     title,
     description,

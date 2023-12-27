@@ -1,5 +1,5 @@
-import { getOsPath } from "./osPath";
 import os from "os";
+import { getOsPath } from "./osPath";
 
 describe("getOsPath", () => {
   it("should return the same path if not windows", () => {

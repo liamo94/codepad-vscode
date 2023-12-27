@@ -20,7 +20,7 @@ export const writeSnippetToFile = async ({
   rootPath?: string;
 }) => {
   // if directory name is set, save to this dir.
-  // Else, if they have no directoryName set this indicates save next to file
+  // else, if they have no `directoryName` set this indicates save next to file
   const dir = directoryPath || (directoryName ? rootPath : filePath);
   const stringSnippet = await format(generateMD(snippet), {
     parser: "markdown",

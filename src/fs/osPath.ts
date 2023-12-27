@@ -1,7 +1,7 @@
 import { platform } from "os";
 
 /**
- * The default path is `.vscode/codepad`, so this ensures if works
+ * The default path is `.vscode/codepad`, so this ensures it works
  * correctly on windows
  */
 export const getOsPath = (anyPath?: string) => {
