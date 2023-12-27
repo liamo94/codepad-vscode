@@ -2,6 +2,10 @@
 
 ## 0.1.5
 
+- Fix for windows file extension
+
+## 0.1.5
+
 - Fix for windows paths
 
 ## 0.1.4
