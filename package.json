@@ -119,6 +119,14 @@
           "command": "codepad.deleteEntry",
           "when": "view == snippets && viewItem == snippet"
         }
+      ],
+      "editor/context": [
+        {
+          "command": "codepad.addSnippet"
+        },
+        {
+          "command": "codepad.addSnippetWithTitle"
+        }
       ]
     }
   },

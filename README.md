@@ -4,13 +4,13 @@
 
 <img width="1506" alt="Screenshot 2023-12-22 at 00 00 29" src="https://github.com/liamo94/codepad-vscode/assets/9355016/8c1d6c74-69cf-42c5-920e-a79fc9d2632a">
 
-Add snippets with one keyboard shortcut - its never been easier to take notes from within a codebase.
+Add snippets with one keyboard shortcut - it has never been easier to take notes from within a codebase.
 
 Choose to store the snippets next to your file, inside your open directory or any location of your choice.
 
 Choose to save the raw `JSON` output so you can feed your snippets to other apps.
 
-If available, save `git` details alongside your commit
+If available, save `git` details within your git
 
 Easily add title, description and other useful notes all within your IDE
 
@@ -24,7 +24,7 @@ All snippets are generated in a formatted `markdown` for easy universal viewing 
 
 - `codepad.savePath`: Path to save code snippet. Leave blank to save by your current IDE directory.
 
-- `codepad.directoryName`: Folder to save code snippets in. Leave blank to save by file (only if no save path is set). Defaults to `.vscode/snippets`. Tip: Make sure the directory is inside your `.gitignore` if using on a shared repository.
+- `codepad.directoryName`: Folder to save code snippets in. Leave blank to save by file (only if no save path is set). Defaults to `.vscode/snippets`. Make sure the directory is inside your `.gitignore` if using on a shared repository.
 
 - `codepad.includeGitDetails`: Choose whether to include git details (if available). Defaults to `true`.
 
@@ -40,10 +40,9 @@ The source code is available on GitHub [here](https://github.com/liamo94/codepad
 
 You can install the latest version of the extension via the Visual Studio Marketplace [here](https://marketplace.visualstudio.com/items?itemName=liamoco.codepad).
 
-Alternatively, open Visual Studio code, press `Cmd + P` on Mac or `Ctrl + P` on Windows and type:
+Alternatively, open Visual Studio code, press `Cmd + shift + P` on Mac or `Ctrl + shift + P` on Windows and type:
 
 > ext install liamoco.codepad
-
 
 ## Controls
 
@@ -55,14 +54,14 @@ To save a quick snippet, press:
 
 > Windows `ctl + shift + '`
 
-You can change this in `Key Bindings` (search `codepad`), as well as setting a separate command for creating a snippet with a title and optional description. Alternatively you can run it manually from the command window by pressing (`cmd + shift + p`/`ctl + shift + p`) and searching `codepad`.
+You can change this in `Key Bindings` (search `codepad`), as well as setting a separate command for creating a snippet with a title and optional description. Alternatively you can run it manually from the command window by pressing (`cmd + shift + p`/`ctl + shift + p`) and searching `codepad`, or right clicking on your open editor and looking for the codepad options.
 
-### Viewing snippets with menu
+### Viewing snippets within the menu
 
-You can click a snippet in the `CODEPAD: SNIPPETS` with to open it inside your IDE.
+You can click a snippet in the `CODEPAD: SNIPPETS` menu to open it inside your IDE.
 
-You can also delete the snippet from within the window by right clicking it.
+You can also delete the snippet from within the menu by right clicking it.
 
 ## Demo
-https://github.com/liamo94/codepad-vscode/assets/9355016/c897c725-2c1a-4d1d-a94d-6e2e7e2e12fa
 
+https://github.com/liamo94/codepad-vscode/assets/9355016/c897c725-2c1a-4d1d-a94d-6e2e7e2e12fa

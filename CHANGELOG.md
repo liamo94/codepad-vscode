@@ -1,6 +1,10 @@
 # Change Log
 
-## 0.1.5
+## 0.1.6
+
+- Add ability to right click and add a snippet
+
+## 0.1.6
 
 - Fix for windows file extension
 
