@@ -11,7 +11,7 @@
   },
   "license": "MIT",
   "private": false,
-  "version": "0.1.6",
+  "version": "0.1.7",
   "engines": {
     "vscode": "^1.85.0"
   },
