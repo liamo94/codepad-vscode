@@ -10,11 +10,11 @@ Choose to store the snippets next to your file, inside your open directory or an
 
 Choose to save the raw `JSON` output so you can feed your snippets to other apps.
 
-If available, save `git` details within your git
+If available, save `git` details within your snippet.
 
-Easily add title, description and other useful notes all within your IDE
+Easily add title, description and other useful notes all within your IDE.
 
-View all snippets in one place
+View all snippets in one place.
 
 All snippets are generated in a formatted `markdown` for easy universal viewing and editing. Optionally hook it up into a dedicated md note-taking app.
 
