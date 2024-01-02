@@ -11,7 +11,7 @@
   },
   "license": "MIT",
   "private": false,
-  "version": "0.1.7",
+  "version": "0.1.8",
   "engines": {
     "vscode": "^1.85.0"
   },
@@ -26,7 +26,7 @@
     "pretest": "yarn run compile && yarn run lint",
     "lint": "eslint .",
     "test": "jest",
-    "copy-files": "rm -rf out/md && cp -r src/md out/md"
+    "copy-files": "rm -rf out/md/templates && cp -r src/md/templates out/md/templates"
   },
   "activationEvents": [],
   "main": "./out/extension.js",

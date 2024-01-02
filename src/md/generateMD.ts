@@ -1,12 +1,12 @@
 import { readFileSync } from "fs";
 import { resolve } from "path";
 import * as vscode from "vscode";
-import { getFileExtension, getFileLoc, getFileName, getFileSize } from "./fs";
-import { Git, Snippet, codepad } from "./types";
-import { getLanguageFromAlias } from "./utils";
+import { getFileExtension, getFileLoc, getFileName, getFileSize } from "../fs";
+import { Git, Snippet, codepad } from "../types";
+import { getLanguageFromAlias } from "../utils";
 
 export const generateMD = (snippet: Snippet) => {
-  const templatePath = "./md/TEMPLATE.md";
+  const templatePath = "./templates/TEMPLATE.md";
   const fullTemplatePath = resolve(__dirname, templatePath);
   const data = readFileSync(fullTemplatePath);
   return replaceMdVariables(snippet, data.toString());
@@ -74,7 +74,7 @@ const generateGitMD = ({
   ssh,
   url,
 }: Git) => {
-  const templatePath = "./md/GIT_INFORMATION.md";
+  const templatePath = "./templates/GIT_INFORMATION.md";
   const fullTemplatePath = resolve(__dirname, templatePath);
   const data = readFileSync(fullTemplatePath);
   return data

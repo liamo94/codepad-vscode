@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.1.8
+
+- Performance improvements
+
 ## 0.1.7
 
 - Add ability to right click and add a snippet

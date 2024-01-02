@@ -1,8 +1,8 @@
-import { Snippet } from "./types";
 import * as vscode from "vscode";
+import { basename } from "path";
+import { Snippet } from "./types";
 import { getGitInformation } from "./getGitInformation";
 import { massageSnippet } from "./utils";
-import { basename } from "path";
 
 export const generateSnippet = async (
   title?: string,
@@ -36,12 +36,14 @@ export const generateSnippet = async (
         selection.end.line,
         selection.end.character
       );
+
   const snippet = editor!.document.getText(selectionRange);
   const git = await getGitInformation(rootPath!, fullFilePathWithFile || "", [
     selection.start.line + 1,
     selection.end.line + 1,
   ]);
-  const snippetObj: Snippet = {
+
+  const codeSnippet: Snippet = {
     snippet,
     createdAt,
     fileName: basename(fullFilePathWithFile || ""),
@@ -52,5 +54,5 @@ export const generateSnippet = async (
     relativePath,
     lines: [selection!.start.line + 1, selection!.end.line + 1],
   };
-  return massageSnippet(snippetObj);
+  return massageSnippet(codeSnippet);
 };

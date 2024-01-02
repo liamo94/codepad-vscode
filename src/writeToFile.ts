@@ -2,9 +2,9 @@ import * as vscode from "vscode";
 import { accessSync, existsSync, mkdirSync, writeFileSync } from "fs";
 import { join } from "path";
 import { format } from "prettier";
-import { Snippet } from "./types";
-import { generateMD } from "./generateMD";
-import { saveRawJSON } from "./saveRawJSON";
+import { Snippet, codepad } from "./types";
+import { generateMD } from "./md";
+import { saveRawJSON } from "./saveJson";
 
 export const writeSnippetToFile = async ({
   directoryPath,
@@ -34,7 +34,9 @@ export const writeSnippetToFile = async ({
   let jsonFileName = fileName;
 
   const directory = join(dir || "", directoryName || "");
-  if (!ensureFileNameSafe(directory, fileName)) {
+
+  //TODO could add protection against slim chance of name collisions
+  if (fileExists(directory, fileName)) {
     fileName += `_${generateUID()}`;
   }
   if (directory && !existsSync(directory)) {
@@ -44,36 +46,44 @@ export const writeSnippetToFile = async ({
   const file = `${join(directory, fileName)}.md`;
 
   writeFileSync(file, stringSnippet);
-  if (!ensureFileNameSafe(directory, fileName, "json")) {
+  if (fileExists(directory, fileName, "json")) {
     jsonFileName += `_${generateUID()}`;
   }
   await saveRawJSON(snippet, directory, jsonFileName);
 
-  vscode.window.showInformationMessage(
-    `Snippet ${fileName} successfully created`
-  );
+  const { openInIDE } = vscode.workspace.getConfiguration(codepad);
+
+  const vsCodePath = vscode.Uri.parse(file);
+
+  const successMessage = `Snippet ${fileName} successfully created`;
+  openInIDE
+    ? vscode.window.showInformationMessage(successMessage)
+    : vscode.window
+        .showInformationMessage(successMessage, "Open snippet")
+        .then((selection) => {
+          if (selection === "Open snippet") {
+            vscode.window.showTextDocument(vsCodePath);
+          }
+        });
 
   return file;
 };
 
+// Create a 3 character uuid. Keep small for simplicity as should be unique enough
 const generateUID = () => {
   let firstPart: string | number = (Math.random() * 46656) | 0;
   let secondPart: string | number = (Math.random() * 46656) | 0;
-  firstPart = ("000" + firstPart.toString(36)).slice(-3);
-  secondPart = ("000" + secondPart.toString(36)).slice(-3);
-  return (firstPart + secondPart).toUpperCase();
+  firstPart = ("000" + firstPart.toString(36)).slice(-1);
+  secondPart = ("000" + secondPart.toString(36)).slice(-2);
+  return (firstPart + secondPart).toLowerCase();
 };
 
-// i don't want to ovveride files
-const ensureFileNameSafe = (
-  directory: string,
-  fileName: string,
-  extension = "md"
-) => {
+// i don't want to override files
+const fileExists = (directory: string, fileName: string, extension = "md") => {
   try {
     accessSync(`${join(directory, fileName)}.${extension}`);
-    return false;
-  } catch {
     return true;
+  } catch {
+    return false;
   }
 };

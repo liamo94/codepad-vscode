@@ -1,1 +1,1 @@
-export { SnipperExplorer } from "./snippetExplorer";
+export { SnipperExplorer, SnippetItem } from "./snippetExplorer";

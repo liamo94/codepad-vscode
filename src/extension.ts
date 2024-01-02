@@ -2,15 +2,14 @@ import * as vscode from "vscode";
 import { dirname, join } from "path";
 import { unlinkSync } from "fs";
 import { writeSnippetToFile } from "./writeToFile";
-import { getDescription, getTitle } from "./details";
+import { getDescription, getTitle } from "./prompts";
 import { generateSnippet } from "./createSnippet";
 import { codepad } from "./types";
-import { SnipperExplorer } from "./explorer";
+import { SnipperExplorer, SnippetItem } from "./explorer";
 import { getSnippetDirectory, getOsPath } from "./fs";
-import { Snippet } from "./explorer/snippetExplorer";
 
 export function activate(context: vscode.ExtensionContext) {
-  console.log("Codepad is now active");
+  console.info("Codepad is running...");
   const rootPath = vscode.workspace.workspaceFolders?.[0].uri.fsPath;
 
   const snippetsExplorerProvider = new SnipperExplorer(rootPath);
@@ -24,10 +23,13 @@ export function activate(context: vscode.ExtensionContext) {
     const vsCodePath = vscode.Uri.parse(file);
     vscode.window.showTextDocument(vsCodePath);
   });
-  vscode.commands.registerCommand("codepad.deleteEntry", (snippet: Snippet) => {
-    unlinkSync(join(getSnippetDirectory(), snippet.title));
-    snippetsExplorerProvider.refresh();
-  });
+  vscode.commands.registerCommand(
+    "codepad.deleteEntry",
+    (snippet: SnippetItem) => {
+      unlinkSync(join(getSnippetDirectory(), snippet.title));
+      snippetsExplorerProvider.refresh();
+    }
+  );
 
   const addSnippet = vscode.commands.registerCommand("codepad.addSnippet", () =>
     runExtension(snippetsExplorerProvider)
@@ -98,16 +100,14 @@ const runExtension = async (
       }
 
       const title = askForDetails ? await getTitle() : "";
-      const description = askForDetails ? await getDescription() : "";
 
       if (title === undefined) {
         console.info("No title provided, aborting");
         return;
       }
+      const description = askForDetails ? await getDescription() : "";
 
       try {
-        progress.report({ increment: 100 });
-
         const snippet = await generateSnippet(title, description);
         const path = await writeSnippetToFile({
           snippet,
@@ -122,9 +122,10 @@ const runExtension = async (
         }
         snippetsExplorerProvider.refresh();
       } catch (e) {
-        progress.report({ increment: 100 });
-        vscode.window.showErrorMessage((e as Error).message);
-        console.error(e);
+        vscode.window.showErrorMessage(
+          "There was an error generating snippet."
+        );
+        console.error(`Error: ${(e as Error).message}`);
       } finally {
         progress.report({ increment: 100 });
       }

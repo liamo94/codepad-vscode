@@ -1,0 +1,1 @@
+export { generateMD } from "./generateMD";

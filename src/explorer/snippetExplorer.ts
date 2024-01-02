@@ -6,10 +6,10 @@ import { getSnippetDirectory, getOsPath } from "../fs";
 
 type Voidable<T> = T | undefined | void;
 
-export class SnipperExplorer implements vscode.TreeDataProvider<Snippet> {
-  private _onDidChangeTreeData: vscode.EventEmitter<Voidable<Snippet>> =
-    new vscode.EventEmitter<Voidable<Snippet>>();
-  readonly onDidChangeTreeData: vscode.Event<Voidable<Snippet>> =
+export class SnipperExplorer implements vscode.TreeDataProvider<SnippetItem> {
+  private _onDidChangeTreeData: vscode.EventEmitter<Voidable<SnippetItem>> =
+    new vscode.EventEmitter<Voidable<SnippetItem>>();
+  readonly onDidChangeTreeData: vscode.Event<Voidable<SnippetItem>> =
     this._onDidChangeTreeData.event;
 
   readonly userConfiguration = vscode.workspace.getConfiguration(codepad);
@@ -24,7 +24,7 @@ export class SnipperExplorer implements vscode.TreeDataProvider<Snippet> {
     this.directory = getSnippetDirectory();
   }
 
-  getTreeItem(element: Snippet): vscode.TreeItem {
+  getTreeItem(element: SnippetItem): vscode.TreeItem {
     return element;
   }
 
@@ -44,7 +44,7 @@ export class SnipperExplorer implements vscode.TreeDataProvider<Snippet> {
     }, {});
   }
 
-  getChildren(): Thenable<Snippet[]> {
+  getChildren(): Thenable<SnippetItem[]> {
     if (!this.workspaceRoot || (!this.directoryName && !this.savePath)) {
       return Promise.resolve([]);
     }
@@ -53,7 +53,7 @@ export class SnipperExplorer implements vscode.TreeDataProvider<Snippet> {
     return Promise.resolve(
       Object.entries(files).map(
         ([title, language]) =>
-          new Snippet(`${title} | ${language}`, title, {
+          new SnippetItem(`${title} | ${language}`, title, {
             command: "codepad.openSnippet",
             title,
             arguments: [title],
@@ -63,7 +63,7 @@ export class SnipperExplorer implements vscode.TreeDataProvider<Snippet> {
   }
 }
 
-export class Snippet extends vscode.TreeItem {
+export class SnippetItem extends vscode.TreeItem {
   constructor(
     public readonly label: string,
     public readonly title: string,
