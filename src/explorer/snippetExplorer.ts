@@ -53,7 +53,7 @@ export class SnipperExplorer implements vscode.TreeDataProvider<SnippetItem> {
     return Promise.resolve(
       Object.entries(files).map(
         ([title, language]) =>
-          new SnippetItem(`${title} | ${language}`, title, {
+          new SnippetItem(`${title.split(".md")[0]} | ${language}`, title, {
             command: "codepad.openSnippet",
             title,
             arguments: [title],

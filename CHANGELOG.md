@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.1.9
+
+- Clean up explorer view
+
 ## 0.1.8
 
 - Performance improvements
