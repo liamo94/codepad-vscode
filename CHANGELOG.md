@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.1.10
+
+- Hovering a snippet in the view shows you the inner code
+
 ## 0.1.9
 
 - Clean up explorer view

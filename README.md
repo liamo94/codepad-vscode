@@ -18,7 +18,17 @@ View all snippets in one place.
 
 All snippets are generated in a formatted `markdown` for easy universal viewing and editing. Optionally hook it up into a dedicated md note-taking app.
 
-> **TIP**: Make sure the location you store snippets is inside `.gitignore` if using a shared repository
+> **TIP**: Make sure the location you store snippets is inside `.gitignore` or outside the working directory if using a shared repository.
+
+In other to exclude snippets from your search, you can add an exclude rule:
+
+```json
+"search.exclude": {
+    "**/.vscode/snippets": true
+  }
+```
+
+Ensure to change the path to your `codepad.savePath`.
 
 ### Available settings:
 
@@ -34,13 +44,13 @@ All snippets are generated in a formatted `markdown` for easy universal viewing 
 
 ### Source Code
 
-The source code is available on GitHub [here](https://github.com/liamo94/codepad-vscode)
+The source code is available on GitHub [here](https://github.com/liamo94/codepad-vscode).
 
 ## Installing
 
 You can install the latest version of the extension via the Visual Studio Marketplace [here](https://marketplace.visualstudio.com/items?itemName=liamoco.codepad).
 
-Alternatively, open Visual Studio code, press `Cmd + shift + P` on Mac or `Ctrl + shift + P` on Windows and type:
+Alternatively, open Visual Studio code, press `cmd + shift + P` on Mac or `ctl + shift + P` on Windows and type:
 
 > ext install liamoco.codepad
 
