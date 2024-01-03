@@ -2,7 +2,8 @@
 
 **Seamlessly create detailed snippets from within VS code**
 
-<img width="1506" alt="Screenshot 2023-12-22 at 00 00 29" src="https://github.com/liamo94/codepad-vscode/assets/9355016/8c1d6c74-69cf-42c5-920e-a79fc9d2632a">
+<img width="1509" alt="codepad-screenshot" src="https://github.com/liamo94/codepad-vscode/assets/9355016/bed74a47-1842-4b4c-9640-64c87abdacac">
+
 
 Add snippets with one keyboard shortcut - it has never been easier to take notes from within a codebase.
 
