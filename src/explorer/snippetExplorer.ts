@@ -20,7 +20,7 @@ export class SnipperExplorer implements vscode.TreeDataProvider<SnippetItem> {
 
   constructor(private workspaceRoot: string | undefined) {}
 
-  refresh(): void {
+  refresh() {
     this._onDidChangeTreeData.fire();
     this.directory = getSnippetDirectory();
   }
@@ -42,10 +42,7 @@ export class SnipperExplorer implements vscode.TreeDataProvider<SnippetItem> {
         const contents = readFileSync(filePath);
         const md = contents.toString();
         const foundLanguage =
-          md
-            .split("File information")[1]
-            ?.split("- **Language**: ")[1]
-            ?.split("\n")[0] || "";
+          md.split("- **Language**: ")[1]?.split("\n")[0] || "";
         const language = supportedLanguages.includes(foundLanguage)
           ? foundLanguage
           : "";
@@ -103,9 +100,9 @@ export class SnippetItem extends vscode.TreeItem {
     const markdown = new vscode.MarkdownString();
     let formattedSnippet = massageString(snippet);
 
-    //There is a weird issue in VS code were syntax highlighting doesn't work unless the codeblock
-    //is surrounded by a `<?php ... ?>` tag.
-    if (language === "php") {
+    //There is a weird issue in VS code were syntax highlighting for php doesn't work unless the
+    //codeblock is surrounded by a `<?php ... ?>` tag.
+    if (language === "php" && formattedSnippet.substring(0, 5) !== "<?php") {
       formattedSnippet = `<?php\n${formattedSnippet}\n?>`;
     }
 

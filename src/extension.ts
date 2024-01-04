@@ -55,8 +55,6 @@ export function activate(context: vscode.ExtensionContext) {
   );
 }
 
-export function deactivate() {}
-
 const runExtension = async (
   snippetsExplorerProvider: SnipperExplorer,
   askForDetails = false

@@ -204,9 +204,9 @@ const extensionMap: Record<string, string> = {
   swift: "swift",
   rs: "rust",
   vb: "vb",
-};
+} as const;
 
-export const supportedLanguages = Object.values(extensionMap);
+export const supportedLanguages = [...new Set(Object.values(extensionMap))];
 
 const specialFiles: Record<string, string> = {
   ["Dockerfile"]: "dockerfile",
