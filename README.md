@@ -4,7 +4,6 @@
 
 <img width="1509" alt="codepad-screenshot" src="https://github.com/liamo94/codepad-vscode/assets/9355016/bed74a47-1842-4b4c-9640-64c87abdacac">
 
-
 Add snippets with one keyboard shortcut - it has never been easier to take notes from within a codebase.
 
 Choose to store the snippets next to your file, inside your open directory or any location of your choice.
@@ -21,12 +20,12 @@ All snippets are generated in a formatted `markdown` for easy universal viewing 
 
 > **TIP**: Make sure the location you store snippets is inside `.gitignore` or outside the working directory if using a shared repository.
 
-In other to exclude snippets from your search, you can add an exclude rule:
+In order to exclude snippets from your search, you can add an exclude rule in your settings:
 
 ```json
 "search.exclude": {
-    "**/.vscode/snippets": true
-  }
+  "**/.vscode/snippets": true
+}
 ```
 
 Ensure to change the path to your `codepad.savePath`.

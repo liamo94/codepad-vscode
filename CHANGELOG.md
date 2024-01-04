@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.1.11
+
+- Fixed error when `savePath` was not set
+
 ## 0.1.10
 
 - Hovering a snippet in the view shows you the inner code

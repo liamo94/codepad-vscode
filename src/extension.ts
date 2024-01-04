@@ -108,8 +108,8 @@ const runExtension = async (
       const description = askForDetails ? await getDescription() : "";
 
       try {
-        const snippet = await generateSnippet(title, description);
-        const path = await writeSnippetToFile({
+        const snippet = generateSnippet(title, description);
+        const path = writeSnippetToFile({
           snippet,
           directoryPath: getOsPath(savePath),
           filePath: fullFilePath || "",

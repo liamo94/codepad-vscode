@@ -4,7 +4,7 @@ import { join } from "path";
 import { writeFileSync } from "fs";
 import { Snippet, codepad } from "./types";
 
-export const saveRawJSON = async (
+export const saveRawJSON = (
   snippet: Snippet,
   directory: string,
   fileName: string
@@ -12,7 +12,7 @@ export const saveRawJSON = async (
   const { saveRawJSON } = vscode.workspace.getConfiguration(codepad);
   if (!saveRawJSON) return;
 
-  const formattedSnippet = await format(JSON.stringify(snippet), {
+  const formattedSnippet = format(JSON.stringify(snippet), {
     parser: "json",
   });
   const filePath = `${join(directory, fileName)}.json`;

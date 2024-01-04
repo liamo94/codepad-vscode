@@ -4,10 +4,10 @@ import { Snippet } from "./types";
 import { getGitInformation } from "./getGitInformation";
 import { massageSnippet } from "./utils";
 
-export const generateSnippet = async (
+export const generateSnippet = (
   title?: string,
   description?: string
-): Promise<Snippet> => {
+): Snippet => {
   const editor = vscode.window.activeTextEditor;
   const rootPath = vscode.workspace.workspaceFolders?.[0].uri.fsPath;
   const fullFilePathWithFile = editor?.document.fileName;
@@ -38,7 +38,7 @@ export const generateSnippet = async (
       );
 
   const snippet = editor!.document.getText(selectionRange);
-  const git = await getGitInformation(rootPath!, fullFilePathWithFile || "", [
+  const git = getGitInformation(rootPath!, fullFilePathWithFile || "", [
     selection.start.line + 1,
     selection.end.line + 1,
   ]);

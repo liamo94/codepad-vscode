@@ -6,7 +6,7 @@ import { Snippet, codepad } from "./types";
 import { generateMD } from "./md";
 import { saveRawJSON } from "./saveJson";
 
-export const writeSnippetToFile = async ({
+export const writeSnippetToFile = ({
   directoryPath,
   filePath,
   snippet,
@@ -22,7 +22,7 @@ export const writeSnippetToFile = async ({
   // if directory name is set, save to this dir.
   // else, if they have no `directoryName` set this indicates save next to file
   const dir = directoryPath || (directoryName ? rootPath : filePath);
-  const stringSnippet = await format(generateMD(snippet), {
+  const stringSnippet = format(generateMD(snippet), {
     parser: "markdown",
   });
   let fileName = snippet.title
@@ -49,7 +49,7 @@ export const writeSnippetToFile = async ({
   if (fileExists(directory, fileName, "json")) {
     jsonFileName += `_${generateUID()}`;
   }
-  await saveRawJSON(snippet, directory, jsonFileName);
+  saveRawJSON(snippet, directory, jsonFileName);
 
   const { openInIDE } = vscode.workspace.getConfiguration(codepad);
 

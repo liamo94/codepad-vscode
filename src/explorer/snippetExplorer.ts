@@ -3,7 +3,7 @@ import { join } from "path";
 import { readFileSync, readdirSync } from "fs";
 import { codepad } from "../types";
 import { getSnippetDirectory, getOsPath } from "../fs";
-import { massageString } from "../utils";
+import { massageString, supportedLanguages } from "../utils";
 
 type Voidable<T> = T | undefined | void;
 
@@ -30,16 +30,25 @@ export class SnipperExplorer implements vscode.TreeDataProvider<SnippetItem> {
   }
 
   readTextFiles(directoryPath: string) {
-    const files = readdirSync(directoryPath, { withFileTypes: true })
-      .filter((f) => f.isFile() && f.name.endsWith(".md"))
-      .map((dirent) => dirent.name);
+    try {
+      const files = readdirSync(directoryPath, { withFileTypes: true })
+        .filter((f) => f.isFile() && f.name.endsWith(".md"))
+        .map((dirent) => dirent.name);
 
-    return files.reduce<Record<string, { language: string; snippet: string }>>(
-      (acc, val) => {
-        const filePath = join(directoryPath, val);
+      return files.reduce<
+        Record<string, { language: string; snippet: string }>
+      >((acc, file) => {
+        const filePath = join(directoryPath, file);
         const contents = readFileSync(filePath);
         const md = contents.toString();
-        const language = md.split("- **Language**: ")[1]?.split("\n")[0] || "";
+        const foundLanguage =
+          md
+            .split("File information")[1]
+            ?.split("- **Language**: ")[1]
+            ?.split("\n")[0] || "";
+        const language = supportedLanguages.includes(foundLanguage)
+          ? foundLanguage
+          : "";
         const snippet =
           md
             .split("```")[1]
@@ -47,11 +56,13 @@ export class SnipperExplorer implements vscode.TreeDataProvider<SnippetItem> {
             ?.slice(1)
             ?.join("\n")
             ?.split("```")[0] || "No snippet found";
-        acc[val] = { language, snippet };
+        acc[file] = { language, snippet };
         return acc;
-      },
-      {}
-    );
+      }, {});
+    } catch {
+      console.info("Snippet directory does not exist");
+      return [];
+    }
   }
 
   getChildren(): Thenable<SnippetItem[]> {
@@ -64,7 +75,7 @@ export class SnipperExplorer implements vscode.TreeDataProvider<SnippetItem> {
       Object.entries(files).map(
         ([title, { language, snippet }]) =>
           new SnippetItem(
-            `${title.split(".md")[0]} | ${language}`,
+            `${title.split(".md")[0]} ${language ? `| ${language}` : ""}`,
             title,
             language,
             snippet,
@@ -90,7 +101,15 @@ export class SnippetItem extends vscode.TreeItem {
     super(label, vscode.TreeItemCollapsibleState.None);
 
     const markdown = new vscode.MarkdownString();
-    markdown.appendCodeblock(massageString(snippet), this.language);
+    let formattedSnippet = massageString(snippet);
+
+    //There is a weird issue in VS code were syntax highlighting doesn't work unless the codeblock
+    //is surrounded by a `<?php ... ?>` tag.
+    if (language === "php") {
+      formattedSnippet = `<?php\n${formattedSnippet}\n?>`;
+    }
+
+    markdown.appendCodeblock(formattedSnippet, this.language);
     this.tooltip = markdown;
   }
 

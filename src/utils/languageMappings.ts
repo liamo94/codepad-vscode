@@ -83,6 +83,7 @@ const extensionMap: Record<string, string> = {
   flxh: "felix",
   f: "fortran",
   f90: "fortran",
+  go: "go",
   s: "gas",
   ["S"]: "gas",
   kid: "genshi",
@@ -103,6 +104,7 @@ const extensionMap: Record<string, string> = {
   hy: "hybris",
   hyb: "hybris",
   ini: "ini",
+  kt: "kotlin",
   cfg: "ini",
   io: "io",
   ik: "ioke",
@@ -201,7 +203,10 @@ const extensionMap: Record<string, string> = {
   yaml: "yaml",
   swift: "swift",
   rs: "rust",
+  vb: "vb",
 };
+
+export const supportedLanguages = Object.values(extensionMap);
 
 const specialFiles: Record<string, string> = {
   ["Dockerfile"]: "dockerfile",
