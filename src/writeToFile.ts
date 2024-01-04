@@ -1,10 +1,13 @@
 import * as vscode from "vscode";
-import { accessSync, existsSync, mkdirSync, writeFileSync } from "fs";
+import { existsSync, mkdirSync, writeFileSync } from "fs";
 import { join } from "path";
 import { format } from "prettier";
+
 import { Snippet, codepad } from "./types";
 import { generateMD } from "./md";
 import { saveRawJSON } from "./saveJson";
+import { generateUID } from "./utils";
+import { fileExists } from "./fs";
 
 export const writeSnippetToFile = ({
   directoryPath,
@@ -22,6 +25,7 @@ export const writeSnippetToFile = ({
   // if directory name is set, save to this dir.
   // else, if they have no `directoryName` set this indicates save next to file
   const dir = directoryPath || (directoryName ? rootPath : filePath);
+
   const stringSnippet = format(generateMD(snippet), {
     parser: "markdown",
   });
@@ -35,7 +39,8 @@ export const writeSnippetToFile = ({
 
   const directory = join(dir || "", directoryName || "");
 
-  //TODO could add protection against slim chance of name collisions
+  // Check file exists first so I don't override files
+  // TODO could add protection against slim chance of name collisions
   if (fileExists(directory, fileName)) {
     fileName += `_${generateUID()}`;
   }
@@ -46,11 +51,18 @@ export const writeSnippetToFile = ({
   const file = `${join(directory, fileName)}.md`;
 
   writeFileSync(file, stringSnippet);
+
   if (fileExists(directory, fileName, "json")) {
     jsonFileName += `_${generateUID()}`;
   }
   saveRawJSON(snippet, directory, jsonFileName);
 
+  showSuccessMessage(fileName, file);
+
+  return file;
+};
+
+const showSuccessMessage = (fileName: string, file: string) => {
   const { openInIDE } = vscode.workspace.getConfiguration(codepad);
 
   const vsCodePath = vscode.Uri.parse(file);
@@ -65,25 +77,4 @@ export const writeSnippetToFile = ({
             vscode.window.showTextDocument(vsCodePath);
           }
         });
-
-  return file;
-};
-
-// Create a 3 character uuid. Keep small for simplicity as should be unique enough
-const generateUID = () => {
-  let firstPart: string | number = (Math.random() * 46656) | 0;
-  let secondPart: string | number = (Math.random() * 46656) | 0;
-  firstPart = ("000" + firstPart.toString(36)).slice(-1);
-  secondPart = ("000" + secondPart.toString(36)).slice(-2);
-  return (firstPart + secondPart).toLowerCase();
-};
-
-// i don't want to override files
-const fileExists = (directory: string, fileName: string, extension = "md") => {
-  try {
-    accessSync(`${join(directory, fileName)}.${extension}`);
-    return true;
-  } catch {
-    return false;
-  }
 };

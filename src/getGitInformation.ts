@@ -1,44 +1,13 @@
 import { execSync } from "child_process";
 import { Git, LineRange } from "./types";
 
-const isGit = (fullFilePath: string) =>
-  execSync(`(cd ${fullFilePath} && git rev-parse --is-inside-work-tree)`)
-    .toString()
-    .trim() === "true";
-
-const createUrl = (url: string, commitHash: string) =>
-  `https://www.${url}/commit/${commitHash}`;
-
-const runGitCommand = (fullFilePath: string, command: string) => {
-  // Wrap in a try/catch as if the file is untracked then there could be issues with git
-  try {
-    return execSync(`(cd ${fullFilePath} && ${command})`).toString().trim();
-  } catch (e) {
-    console.error("Error running git command", e);
-    return "";
-  }
-};
-
-const getShareableLink = (
-  url: string,
-  commitHash: string,
-  repoPath: string,
-  fullFilePath: string,
-  [fromLine, toLine]: LineRange
-) => {
-  const relativePath = fullFilePath.replace(repoPath, "");
-  const lines =
-    fromLine === toLine ? `L${fromLine}` : `L${fromLine}-L${toLine}`;
-  return `https://www.${url}/blob/${commitHash}${relativePath}#${lines}`;
-};
-
 export const getGitInformation = (
   fullFilePath: string,
   rootToFile: string,
   selectedLines: LineRange
 ): Git | undefined => {
   if (!isGit(fullFilePath)) {
-    console.info("No .git detected in repository");
+    console.info("No `.git` detected in repository");
     return undefined;
   }
 
@@ -86,4 +55,35 @@ export const getGitInformation = (
       selectedLines
     ),
   };
+};
+
+const isGit = (fullFilePath: string) =>
+  execSync(`(cd ${fullFilePath} && git rev-parse --is-inside-work-tree)`)
+    .toString()
+    .trim() === "true";
+
+const createUrl = (url: string, commitHash: string) =>
+  `https://www.${url}/commit/${commitHash}`;
+
+const runGitCommand = (fullFilePath: string, command: string) => {
+  // Wrap in a try/catch as if the file is untracked then there could be issues with git
+  try {
+    return execSync(`(cd ${fullFilePath} && ${command})`).toString().trim();
+  } catch (e) {
+    console.error("Error running git command", e);
+    return "";
+  }
+};
+
+const getShareableLink = (
+  url: string,
+  commitHash: string,
+  repoPath: string,
+  fullFilePath: string,
+  [fromLine, toLine]: LineRange
+) => {
+  const relativePath = fullFilePath.replace(repoPath, "");
+  const lines =
+    fromLine === toLine ? `L${fromLine}` : `L${fromLine}-L${toLine}`;
+  return `https://www.${url}/blob/${commitHash}${relativePath}#${lines}`;
 };

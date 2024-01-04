@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.1.12
+
+- Run command to only run title separately
+
 ## 0.1.11
 
 - Fixed error when `savePath` was not set

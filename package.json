@@ -11,7 +11,7 @@
   },
   "license": "MIT",
   "private": false,
-  "version": "0.1.11",
+  "version": "0.1.12",
   "engines": {
     "vscode": "^1.85.0"
   },
@@ -53,8 +53,12 @@
         "title": "Codepad: Add snippet"
       },
       {
-        "command": "codepad.addSnippetWithTitle",
-        "title": "Codepad: Add snippet (with title, description)"
+        "command": "codepad.addSnippetTitle",
+        "title": "Codepad: Add snippet (with title)"
+      },
+      {
+        "command": "codepad.addSnippetTitleDescription",
+        "title": "Codepad: Add snippet (with title & description)"
       },
       {
         "command": "codepad.refreshEntry",
@@ -125,7 +129,10 @@
           "command": "codepad.addSnippet"
         },
         {
-          "command": "codepad.addSnippetWithTitle"
+          "command": "codepad.addSnippetTitle"
+        },
+        {
+          "command": "codepad.addSnippetTitleDescription"
         }
       ]
     }

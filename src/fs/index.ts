@@ -6,3 +6,4 @@ export {
 } from "./fileInformation";
 export { getSnippetDirectory } from "./directoryPath";
 export { getOsPath } from "./osPath";
+export { fileExists } from "./fileExists";

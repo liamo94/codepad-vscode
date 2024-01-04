@@ -8,7 +8,7 @@ import { codepad } from "./types";
 import { SnipperExplorer, SnippetItem } from "./explorer";
 import { getSnippetDirectory, getOsPath } from "./fs";
 
-export function activate(context: vscode.ExtensionContext) {
+export const activate = (context: vscode.ExtensionContext) => {
   console.info("Codepad is running...");
   const rootPath = vscode.workspace.workspaceFolders?.[0].uri.fsPath;
 
@@ -32,16 +32,27 @@ export function activate(context: vscode.ExtensionContext) {
   );
 
   const addSnippet = vscode.commands.registerCommand("codepad.addSnippet", () =>
-    runExtension(snippetsExplorerProvider)
+    runExtension({ snippetsExplorerProvider })
   );
 
-  const addSnippetWithTitle = vscode.commands.registerCommand(
-    "codepad.addSnippetWithTitle",
-    () => runExtension(snippetsExplorerProvider, true)
+  const addSnippetTitle = vscode.commands.registerCommand(
+    "codepad.addSnippetTitle",
+    () => runExtension({ snippetsExplorerProvider, askForTitle: true })
+  );
+
+  const addSnippetDescription = vscode.commands.registerCommand(
+    "codepad.addSnippetTitleDescription",
+    () =>
+      runExtension({
+        snippetsExplorerProvider,
+        askForTitle: true,
+        askForDescription: true,
+      })
   );
 
   context.subscriptions.push(addSnippet);
-  context.subscriptions.push(addSnippetWithTitle);
+  context.subscriptions.push(addSnippetTitle);
+  context.subscriptions.push(addSnippetDescription);
 
   vscode.workspace.onDidChangeConfiguration(
     (event: vscode.ConfigurationChangeEvent) => {
@@ -53,12 +64,17 @@ export function activate(context: vscode.ExtensionContext) {
       }
     }
   );
-}
+};
 
-const runExtension = async (
-  snippetsExplorerProvider: SnipperExplorer,
-  askForDetails = false
-) => {
+const runExtension = async ({
+  snippetsExplorerProvider,
+  askForTitle,
+  askForDescription,
+}: {
+  snippetsExplorerProvider: SnipperExplorer;
+  askForTitle?: boolean;
+  askForDescription?: boolean;
+}) => {
   vscode.window.withProgress(
     {
       location: vscode.ProgressLocation.Window,
@@ -97,13 +113,13 @@ const runExtension = async (
         }
       }
 
-      const title = askForDetails ? await getTitle() : "";
+      const title = askForTitle ? await getTitle() : "";
 
       if (title === undefined) {
         console.info("No title provided, aborting");
         return;
       }
-      const description = askForDetails ? await getDescription() : "";
+      const description = askForDescription ? await getDescription() : "";
 
       try {
         const snippet = generateSnippet(title, description);
