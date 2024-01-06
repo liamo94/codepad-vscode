@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.1.14
+
+- Fix issue with non git directory
+
 ## 0.1.13
 
 - Copy snippet from snippet explorer

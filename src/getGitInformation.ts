@@ -57,10 +57,17 @@ export const getGitInformation = (
   };
 };
 
-const isGit = (fullFilePath: string) =>
-  execSync(`(cd ${fullFilePath} && git rev-parse --is-inside-work-tree)`)
-    .toString()
-    .trim() === "true";
+const isGit = (fullFilePath: string) => {
+  try {
+    return (
+      execSync(`(cd ${fullFilePath} && git rev-parse --is-inside-work-tree)`)
+        .toString()
+        .trim() === "true"
+    );
+  } catch {
+    return false;
+  }
+};
 
 const createUrl = (url: string, commitHash: string) =>
   `https://www.${url}/commit/${commitHash}`;
