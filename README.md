@@ -42,6 +42,16 @@ Ensure to change the path to your `codepad.savePath`.
 
 - `codepad.saveRawJSON`: Save the raw JSON of the data used to generate your snippet. Defaults to `false`.
 
+### Snippet explorer
+
+- You can easily view all snippets in one place in the snippet explorer. From here you can click a snippet to open it, or by right clicking either deleting the snippet or copying it to the clipboard. Hovering over a snipept shows a preview.
+
+![snippets](https://github.com/liamo94/codepad-vscode/assets/9355016/fd631290-204f-4ed3-8e37-f1aae9957802)
+
+- To find a snippet, press `cmd + f`/`ctl + f`, and use the arrow keys to jump between findings before hitting enter to open the selected snippet.
+
+![find](https://github.com/liamo94/codepad-vscode/assets/9355016/7b2bb18f-33a8-423b-8278-53a8cae1ce4e)
+
 ### Source Code
 
 The source code is available on GitHub [here](https://github.com/liamo94/codepad-vscode).
@@ -74,4 +84,6 @@ You can also delete the snippet from within the menu by right clicking it.
 
 ## Demo
 
-https://github.com/liamo94/codepad-vscode/assets/9355016/c897c725-2c1a-4d1d-a94d-6e2e7e2e12fa
+https://github.com/liamo94/codepad-vscode/assets/9355016/69640f97-d75b-444f-b6c7-168f3e3f20bb
+
+
