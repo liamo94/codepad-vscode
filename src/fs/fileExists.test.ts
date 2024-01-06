@@ -1,6 +1,6 @@
 import fs from "fs";
 import { join } from "path";
-import { fileExists } from "./fileExists"; // Update with your actual file path
+import { fileExists } from "./fileExists";
 
 jest.mock("fs");
 

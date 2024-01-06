@@ -11,7 +11,7 @@
   },
   "license": "MIT",
   "private": false,
-  "version": "0.1.12",
+  "version": "0.1.13",
   "engines": {
     "vscode": "^1.85.0"
   },
@@ -69,6 +69,10 @@
         }
       },
       {
+        "command": "codepad.copySnippet",
+        "title": "Copy "
+      },
+      {
         "command": "codepad.deleteEntry",
         "title": "Delete"
       }
@@ -119,6 +123,10 @@
         }
       ],
       "view/item/context": [
+        {
+          "command": "codepad.copySnippet",
+          "when": "view == snippets && viewItem == snippet"
+        },
         {
           "command": "codepad.deleteEntry",
           "when": "view == snippets && viewItem == snippet"

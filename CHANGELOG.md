@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.1.13
+
+- Copy snippet from snippet explorer
+
 ## 0.1.12
 
 - Run command to only run title separately

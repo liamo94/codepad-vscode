@@ -1,6 +1,9 @@
-// Reference: https://github.com/jincheng9/markdown_supported_languages
+type Extension = string;
+type Language = string;
+type FileName = string;
 
-const extensionMap: Record<string, string> = {
+// Reference: https://github.com/jincheng9/markdown_supported_languages
+const extensionMap: Record<Extension, Language> = {
   js: "js",
   json: "json",
   ts: "ts",
@@ -208,7 +211,7 @@ const extensionMap: Record<string, string> = {
 
 export const supportedLanguages = [...new Set(Object.values(extensionMap))];
 
-const specialFiles: Record<string, string> = {
+const specialFiles: Record<FileName, Language> = {
   ["Dockerfile"]: "dockerfile",
   ["SConstruct"]: "python",
   ["SConscript"]: "python",
@@ -225,7 +228,10 @@ const specialFiles: Record<string, string> = {
   autodelegate: "myghty",
 };
 
-export const getLanguageFromAlias = (fileName: string, extension?: string) => {
+export const getLanguageFromAlias = (
+  fileName: FileName,
+  extension?: Extension
+) => {
   if (!extension) return specialFiles[fileName] || "";
 
   return specialFiles[fileName] || extensionMap[extension.substring(1)] || "";

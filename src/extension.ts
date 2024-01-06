@@ -31,6 +31,13 @@ export const activate = (context: vscode.ExtensionContext) => {
     }
   );
 
+  vscode.commands.registerCommand(
+    "codepad.copySnippet",
+    ({ snippet }: SnippetItem) => {
+      vscode.env.clipboard.writeText(snippet);
+    }
+  );
+
   const addSnippet = vscode.commands.registerCommand("codepad.addSnippet", () =>
     runExtension({ snippetsExplorerProvider })
   );
